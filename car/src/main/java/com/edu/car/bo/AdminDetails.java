@@ -1,4 +1,4 @@
-package com.edu.caradmin.bo;
+package com.edu.car.bo;
 
 import com.edu.car.model.Customer;
 import com.edu.car.model.Role;

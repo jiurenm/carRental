@@ -1,4 +1,4 @@
-package com.edu.caradmin.component;
+package com.edu.car.component;
 
 import com.alibaba.fastjson.JSON;
 import com.edu.car.dto.Results;

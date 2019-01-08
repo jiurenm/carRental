@@ -1,4 +1,4 @@
-package com.edu.caradmin.util;
+package com.edu.car.util;
 
 import com.google.common.collect.Maps;
 import io.jsonwebtoken.Claims;

@@ -1,6 +1,7 @@
 package com.edu.caradmin.service;
 
 import com.edu.car.model.Customer;
+import com.edu.car.model.Role;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,4 +17,7 @@ public interface CustomerService {
     Customer findCustomerByName(String username);
     Customer findCustomerById(Long id);
     void setBlackList(Long id);
+    void addAuthority(Long id, Long uid, Integer rid);
+    List<Role> findRoles(Long uid);
+    Role findRoleById(Long uid, Integer id);
 }

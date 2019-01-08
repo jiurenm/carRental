@@ -1,11 +1,11 @@
-package com.edu.caradmin.config;
+package com.edu.car.config;
 
-import com.edu.car.model.Customer;
+import com.edu.car.bo.AdminDetails;
+import com.edu.car.component.JwtAuthenticationTokenFilter;
+import com.edu.car.component.RestAuthenticationEntryPoint;
+import com.edu.car.component.RestfulAccessDeniedHandler;
 import com.edu.car.mapper.CustomerMapper;
-import com.edu.caradmin.bo.AdminDetails;
-import com.edu.caradmin.component.JwtAuthenticationTokenFilter;
-import com.edu.caradmin.component.RestAuthenticationEntryPoint;
-import com.edu.caradmin.component.RestfulAccessDeniedHandler;
+import com.edu.car.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

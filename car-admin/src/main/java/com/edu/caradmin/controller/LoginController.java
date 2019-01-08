@@ -49,7 +49,6 @@ public class LoginController {
     @ApiParam(name = "用户", required = true)
     @RequestMapping(value = "/adminLogin", method = RequestMethod.POST)
     public Results login(@RequestBody @Valid LoginDto loginDto, BindingResult result) {
-        log.info(loginDto.toString());
         if(result.hasErrors()) {
             return new Results().validateFailed(result);
         }

@@ -1,7 +1,7 @@
 package com.edu.caradmin.service.impl;
 
+import com.edu.car.util.JwtTokenUtil;
 import com.edu.caradmin.service.AdminService;
-import com.edu.caradmin.util.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;

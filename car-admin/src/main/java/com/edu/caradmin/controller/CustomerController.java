@@ -2,22 +2,21 @@ package com.edu.caradmin.controller;
 
 import com.edu.car.dto.Results;
 import com.edu.car.model.Customer;
+import com.edu.car.model.Role;
+import com.edu.car.uid.IdWorker;
+import com.edu.caradmin.dto.AuthorityDto;
 import com.edu.caradmin.redis.RedisTool;
 import com.edu.caradmin.service.CustomerService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
 
 import java.util.List;
@@ -33,18 +32,15 @@ import java.util.UUID;
 @Api(value = "CustomerController", description = "用户")
 @RestController
 public class CustomerController {
-    private static final String LOCK_KEY = "Lock";
     private static final String REQUEST_ID = UUID.randomUUID().toString();
     private static final int EXPIRE_TIME = 100;
 
     private final Jedis jedis;
-    private final RedisTool redisTool;
     private final CustomerService customerService;
 
     @Autowired
-    public CustomerController(CustomerService customerService, RedisTool redisTool, Jedis jedis) {
+    public CustomerController(CustomerService customerService, Jedis jedis) {
         this.customerService = customerService;
-        this.redisTool = redisTool;
         this.jedis = jedis;
     }
 
@@ -81,6 +77,7 @@ public class CustomerController {
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/setBlackList/{id}", method = RequestMethod.POST)
     public Results setBlackList(@PathVariable Long id) {
+        String lockKey = "blackList_key";
         if (id == null) {
             return new Results().validateFailed("id不能为空");
         }
@@ -91,15 +88,14 @@ public class CustomerController {
         if (!customer.getIsEnable()) {
             return new Results().failed("不能重复操作");
         }
-        if (!redisTool.tryGetDistributedLock(jedis, LOCK_KEY, REQUEST_ID, EXPIRE_TIME)) {
+        if (RedisTool.tryGetDistributedLock(jedis, lockKey, REQUEST_ID, EXPIRE_TIME)) {
             return new Results().failed("操作太快");
         } else {
             customerService.setBlackList(id);
-            if (redisTool.releaseDistributedLock(jedis, LOCK_KEY, REQUEST_ID)) {
+            if (RedisTool.releaseDistributedLock(jedis, lockKey, REQUEST_ID)) {
                 return new Results().success(id);
             } else {
-                log.error("释放锁失败：{},{},{}", id, LOCK_KEY, REQUEST_ID);
-                return new Results().success("释放锁失败：" + id);
+                return new Results().success("释放锁失败：" + lockKey + " : " + REQUEST_ID);
             }
         }
     }
@@ -122,5 +118,35 @@ public class CustomerController {
         }
         PageInfo<Customer> pageInfo = new PageInfo<>(customers);
         return new Results().pageSuccess(pageInfo.getList());
+    }
+
+    @ApiOperation(value = "添加权限")
+    @ApiParam(required = true)
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(value = "/addAuthority", method = RequestMethod.POST)
+    public Results addAuthority(@RequestBody @Validated AuthorityDto authorityDto, BindingResult result) {
+        String lockKey = "addAuthority_key";
+        if(result.hasErrors()) {
+            return new Results().validateFailed(result);
+        }
+        if (RedisTool.tryGetDistributedLock(jedis, lockKey, REQUEST_ID, EXPIRE_TIME)) {
+            return new Results().failed("操作太快");
+        } else {
+            try {
+                Long id = IdWorker.getId();
+                Role role = customerService.findRoleById(authorityDto.getUid(), authorityDto.getRid());
+                if (role != null) {
+                    return new Results().failed("不能重复操作");
+                }
+                customerService.addAuthority(id, authorityDto.getUid(), authorityDto.getRid());
+                if (RedisTool.releaseDistributedLock(jedis, lockKey, REQUEST_ID)) {
+                    return new Results().success(id);
+                } else {
+                    return new Results().success("释放锁失败：" + lockKey + " : " + REQUEST_ID);
+                }
+            } catch (Exception e) {
+                return new Results().failed(e.getMessage());
+            }
+        }
     }
 }

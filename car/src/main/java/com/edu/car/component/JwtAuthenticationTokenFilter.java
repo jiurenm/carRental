@@ -1,6 +1,6 @@
-package com.edu.caradmin.component;
+package com.edu.car.component;
 
-import com.edu.caradmin.util.JwtTokenUtil;
+import com.edu.car.util.JwtTokenUtil;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
