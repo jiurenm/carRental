@@ -17,18 +17,18 @@ import java.util.List;
  */
 @Mapper
 public interface CustomerMapper {
-    @Select("SELECT c.id,c.username,c.name,c.age,c.tel,c.email,c.driveNum,c.driveType,l.password,l.isEnable FROM car.customer c LEFT JOIN car.login l ON l.id=c.id")
+    @Select("SELECT c.id,c.username,c.name,c.age,c.tel,c.email,c.driveNum,c.driveType,l.password,l.isEnable FROM car.customer c JOIN car.login l ON l.id=c.id")
     List<Customer> showCustomers();
 
-    @Select("SELECT c.id,c.username,c.name,c.age,c.tel,c.email,c.driveNum,c.driveType,l.password,l.isEnable FROM car.customer c LEFT JOIN car.login l ON l.id=c.id WHERE c.username=#{username}")
+    @Select("SELECT c.id,c.username,c.name,c.age,c.tel,c.email,c.driveNum,c.driveType,l.password,l.isEnable FROM car.customer c JOIN car.login l ON l.id=c.id WHERE c.username=#{username}")
     Customer findCustomer(String username);
 
-    @Select("SELECT c.id,c.username,c.name,c.age,c.tel,c.email,c.driveNum,c.driveType,l.password,l.isEnable FROM car.customer c LEFT JOIN car.login l ON l.id=c.id WHERE c.id=#{id}")
+    @Select("SELECT c.id,c.username,c.name,c.age,c.tel,c.email,c.driveNum,c.driveType,l.password,l.isEnable FROM car.customer c JOIN car.login l ON l.id=c.id WHERE c.id=#{id}")
     Customer findCustomerById(Long id);
 
-    @Select("SELECT ur.uid AS id,r.name FROM car.user_role ur LEFT JOIN car.role r ON r.id=ur.rid WHERE ur.uid=#{id}")
+    @Select("SELECT ur.uid AS id,r.name FROM car.user_role ur JOIN car.role r ON r.id=ur.rid WHERE ur.uid=#{id}")
     List<Role> findRoles(Long id);
 
-    @Select("SELECT ur.uid AS id,r.name FROM car.user_role ur LEFT JOIN car.role r ON r.id=ur.rid WHERE ur.uid=#{uid} AND r.id=#{id}")
+    @Select("SELECT ur.uid AS id,r.name FROM car.user_role ur JOIN car.role r ON r.id=ur.rid WHERE ur.uid=#{uid} AND r.id=#{id}")
     Role findRoleById(@Param("uid") Long uid, @Param("id") Integer id);
 }
