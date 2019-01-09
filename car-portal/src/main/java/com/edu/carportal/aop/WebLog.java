@@ -1,4 +1,4 @@
-package com.edu.caradmin.aop;
+package com.edu.carportal.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -18,13 +18,13 @@ import java.util.Objects;
  * 日志
  *
  * @author Administrator
- * @date 2018/12/29 17:46
+ * @date 2019/1/9 11:01
  */
 @Slf4j
 @Aspect
 @Component
 public class WebLog {
-    @Pointcut("execution(public * com.edu.caradmin.controller.*.*(..))")
+    @Pointcut("execution(public * com.edu.carportal.controller.*.*(..))")
     public void webLog() {}
 
     @Before("webLog()")
@@ -60,17 +60,16 @@ public class WebLog {
     public void doAfterThrowing(Throwable e) {
         log.debug("异常执行");
         log.debug("异常代码：" + e.getClass().getName());
-		log.debug("异常信息：" + e.getMessage());
+        log.debug("异常信息：" + e.getMessage());
     }
-	
-	@Around("webLog()")
-	public Object around(ProceedingJoinPoint proceedingJoinPoint) {
-		try {
-		    log.debug("1","1");
-			return proceedingJoinPoint.proceed();
-		} catch (Throwable throwable) {
-		    log.error("异常：", throwable.getCause());
-			return null;
-		}
-	}
+
+    @Around("webLog()")
+    public Object around(ProceedingJoinPoint proceedingJoinPoint) {
+        try {
+            return proceedingJoinPoint.proceed();
+        } catch (Throwable throwable) {
+            log.error("异常：", throwable.getCause());
+            return null;
+        }
+    }
 }
