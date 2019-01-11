@@ -6,7 +6,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -15,14 +14,13 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * carRental
+ * JWT工具类
  *
  * @author Administrator
  * @date 2018/12/29 16:30
  */
 @Slf4j
 @Component
-@RefreshScope
 public class JwtTokenUtil {
     private static final String CLAIM_KEY_USERNAME ="sub";
     private static final String CLAIM_KEY_CREATED = "created";

@@ -3,9 +3,9 @@ package com.edu.caradmin.controller;
 import com.edu.car.dto.Results;
 import com.edu.car.model.Customer;
 import com.edu.car.model.Role;
+import com.edu.car.redis.RedisTool;
 import com.edu.car.uid.IdWorker;
 import com.edu.caradmin.dto.AuthorityDto;
-import com.edu.caradmin.redis.RedisTool;
 import com.edu.caradmin.service.CustomerService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -32,8 +32,7 @@ import java.util.UUID;
 @Api(value = "CustomerController", description = "用户")
 @RestController
 public class CustomerController {
-    private static final String REQUEST_ID = UUID.randomUUID().toString();
-    private static final int EXPIRE_TIME = 100;
+    private static final int EXPIRE_TIME = 1000;
 
     private final Jedis jedis;
     private final CustomerService customerService;
@@ -88,14 +87,15 @@ public class CustomerController {
         if (!customer.getIsEnable()) {
             return new Results().failed("不能重复操作");
         }
-        if (RedisTool.tryGetDistributedLock(jedis, lockKey, REQUEST_ID, EXPIRE_TIME)) {
+        String requestId = UUID.randomUUID().toString();
+        if (RedisTool.tryGetDistributedLock(jedis, lockKey, requestId, EXPIRE_TIME)) {
             return new Results().failed("操作太快");
         } else {
             customerService.setBlackList(id);
-            if (RedisTool.releaseDistributedLock(jedis, lockKey, REQUEST_ID)) {
+            if (RedisTool.releaseDistributedLock(jedis, lockKey, requestId)) {
                 return new Results().success(id);
             } else {
-                return new Results().success("释放锁失败：" + lockKey + " : " + REQUEST_ID);
+                return new Results().success("释放锁失败：" + lockKey + " : " + requestId);
             }
         }
     }
@@ -129,7 +129,8 @@ public class CustomerController {
         if(result.hasErrors()) {
             return new Results().validateFailed(result);
         }
-        if (RedisTool.tryGetDistributedLock(jedis, lockKey, REQUEST_ID, EXPIRE_TIME)) {
+        String requestId = UUID.randomUUID().toString();
+        if (RedisTool.tryGetDistributedLock(jedis, lockKey, requestId, EXPIRE_TIME)) {
             return new Results().failed("操作太快");
         } else {
             try {
@@ -139,10 +140,10 @@ public class CustomerController {
                     return new Results().failed("不能重复操作");
                 }
                 customerService.addAuthority(id, authorityDto.getUid(), authorityDto.getRid());
-                if (RedisTool.releaseDistributedLock(jedis, lockKey, REQUEST_ID)) {
+                if (RedisTool.releaseDistributedLock(jedis, lockKey, requestId)) {
                     return new Results().success(id);
                 } else {
-                    return new Results().success("释放锁失败：" + lockKey + " : " + REQUEST_ID);
+                    return new Results().success("释放锁失败：" + lockKey + " : " + requestId);
                 }
             } catch (Exception e) {
                 return new Results().failed(e.getMessage());

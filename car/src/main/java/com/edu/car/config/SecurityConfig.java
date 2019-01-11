@@ -24,7 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * Spring Security配置
+ * SpringSecurity配置
  *
  * @author Administrator
  * @date 2018/12/29 18:28
@@ -69,7 +69,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public UserDetailsService userDetailsService() {
         return username -> {
             Customer customer = customerMapper.findCustomer(username);
-            if(customer != null) {
+            if (customer == null) {
+                customer = customerMapper.findCustomerByDriveNum(username);
+            }
+            if (customer != null) {
                 return new AdminDetails(customer,customerMapper.findRoles(customer.getId()));
             }
             throw new UsernameNotFoundException("用户名或密码错误");

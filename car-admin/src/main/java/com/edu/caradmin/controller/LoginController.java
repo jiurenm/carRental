@@ -49,14 +49,14 @@ public class LoginController {
     @ApiParam(name = "用户", required = true)
     @RequestMapping(value = "/adminLogin", method = RequestMethod.POST)
     public Results login(@RequestBody @Valid LoginDto loginDto, BindingResult result) {
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             return new Results().validateFailed(result);
         }
-        String token = adminService.login(loginDto.getUsername(),loginDto.getPassword());
-        if(Strings.isNullOrEmpty(token)) {
+        String token = adminService.login(loginDto.getUsername(), loginDto.getPassword());
+        if (Strings.isNullOrEmpty(token)) {
             return new Results().validateFailed("用户名或密码错误");
         }
-        ImmutableMap<String,String> tokenMap = ImmutableMap.of("token",token,"tokenHead",tokenHead);
+        ImmutableMap<String, String> tokenMap = ImmutableMap.of("token", token, "tokenHead", tokenHead);
         return new Results().success(tokenMap);
     }
 

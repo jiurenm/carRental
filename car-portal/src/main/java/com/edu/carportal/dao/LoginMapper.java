@@ -1,10 +1,8 @@
 package com.edu.carportal.dao;
 
-import com.edu.car.model.Customer;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 /**
  * carRental

@@ -1,8 +1,7 @@
-package com.edu.caradmin.redis;
+package com.edu.car.redis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.Jedis;
@@ -17,7 +16,6 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 @Slf4j
 @Configuration
-@RefreshScope
 public class JedisConfig {
     @Value("${spring.redis.host}")
     private String host;
