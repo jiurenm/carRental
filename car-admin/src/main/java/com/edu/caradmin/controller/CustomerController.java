@@ -44,7 +44,7 @@ public class CustomerController {
     }
 
     @ApiOperation(value = "获取全部用户信息")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize(value = "hasRole('ADMIN')")
     @RequestMapping(value = "/customers", method = RequestMethod.GET)
     public Results showCustomers() {
         List<Customer> customers = customerService.showCustomers();
@@ -57,7 +57,7 @@ public class CustomerController {
 
     @ApiOperation(value = "通过用户名获取用户信息")
     @ApiImplicitParam(name = "username", value = "用户名",required = true, dataType = "String")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize(value = "hasRole('ADMIN')")
     @RequestMapping(value = "/findCustomer/{username}", method = RequestMethod.POST)
     public Results findCustomer(@PathVariable String username) {
         if (Strings.isNullOrEmpty(username)) {
@@ -73,7 +73,7 @@ public class CustomerController {
 
     @ApiOperation(value = "设置黑名单")
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize(value = "hasRole('ADMIN')")
     @RequestMapping(value = "/setBlackList/{id}", method = RequestMethod.POST)
     public Results setBlackList(@PathVariable Long id) {
         String lockKey = "blackList_key";
@@ -105,7 +105,7 @@ public class CustomerController {
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int"),
             @ApiImplicitParam(name = "pageSize", value = "每页数据量", required = true, dataType = "int")
     })
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize(value = "hasRole('ADMIN')")
     @RequestMapping(value = "/customerList", method = RequestMethod.POST)
     public Results findList(Integer pageNum, Integer pageSize) {
         if (pageNum == null || pageSize == null) {
@@ -121,8 +121,8 @@ public class CustomerController {
     }
 
     @ApiOperation(value = "添加权限")
-    @ApiParam(required = true)
-    @PreAuthorize("hasRole('ADMIN')")
+    @ApiParam(name = "authorityDto", value = "权限", required = true, type = "AuthorityDto")
+    @PreAuthorize(value = "hasRole('ADMIN')")
     @RequestMapping(value = "/addAuthority", method = RequestMethod.POST)
     public Results addAuthority(@RequestBody @Validated AuthorityDto authorityDto, BindingResult result) {
         String lockKey = "addAuthority_key";
@@ -148,6 +148,22 @@ public class CustomerController {
             } catch (Exception e) {
                 return new Results().failed(e.getMessage());
             }
+        }
+    }
+
+    @ApiOperation(value = "删除权限")
+    @ApiParam(name = "authorityDto", value = "权限", required = true, type = "AuthorityDto")
+    @PreAuthorize(value = "hasRole('ADMIN')")
+    @RequestMapping(value = "/deleteAuthority", method = RequestMethod.POST)
+    public Results deleteAuthority(@RequestBody AuthorityDto authorityDto, BindingResult result) {
+        if (result.hasErrors()) {
+            return new Results().validateFailed(result);
+        }
+        try {
+            customerService.deleteAuthority(authorityDto.getUid(), authorityDto.getRid());
+            return new Results().success(authorityDto.getUid());
+        } catch (Exception e) {
+            return new Results().failed(e.getMessage());
         }
     }
 }

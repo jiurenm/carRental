@@ -53,12 +53,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Role> findRoles(Long uid) {
-        return customerMapper.findRoles(uid);
+    public Role findRoleById(Long uid, Integer id) {
+        return customerMapper.findRoleById(uid, id);
     }
 
     @Override
-    public Role findRoleById(Long uid, Integer id) {
-        return customerMapper.findRoleById(uid, id);
+    public void deleteAuthority(Long uid, Integer rid) {
+        adminMapper.deleteAuthority(uid, rid);
     }
 }

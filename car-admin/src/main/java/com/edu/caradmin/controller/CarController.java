@@ -2,14 +2,15 @@ package com.edu.caradmin.controller;
 
 import com.edu.car.dto.Results;
 import com.edu.car.model.Car;
+import com.edu.caradmin.dto.PageDto;
 import com.edu.caradmin.service.CarService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,16 +45,13 @@ public class CarController {
     }
 
     @ApiOperation(value = "分页获取车辆信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "pageSize", value = "每页数据量", required = true, dataType = "int")
-    })
+    @ApiParam(name = "pageDto", value = "页码", required = true, type = "PageDto")
     @RequestMapping(value = "/carList", method = RequestMethod.POST)
-    public Results findList(Integer pageNum, Integer pageSize) {
-        if (pageNum == null || pageSize == null) {
-            return new Results().validateFailed("页码或每页数据量不能为空");
+    public Results findList(@RequestBody @Validated PageDto pageDto, BindingResult result) {
+        if (result.hasErrors()) {
+            return new Results().validateFailed(result);
         }
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(pageDto.getPageNum(), pageDto.getPageSize());
         List<Car> carList = carService.showCar();
         if (carList.isEmpty()) {
             return new Results().failed("没有记录");

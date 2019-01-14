@@ -5,6 +5,9 @@ import com.edu.car.model.Customer;
 import com.edu.car.uid.IdWorker;
 import com.edu.carportal.dto.RegisterDto;
 import com.edu.carportal.service.LoginService;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
@@ -12,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * carRental
@@ -30,6 +35,11 @@ public class LoginController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    private ListeningExecutorService executorService = MoreExecutors.listeningDecorator(
+            new ScheduledThreadPoolExecutor(2,
+                    new BasicThreadFactory.Builder().namingPattern("schedule-pool-%d").daemon(true).build())
+    );
+
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Results register(@RequestBody @Validated RegisterDto registerDto) {
         Customer customer = loginService.findCustomerByName(registerDto.getUsername());
@@ -37,8 +47,8 @@ public class LoginController {
             return new Results().failed("已注册");
         }
         String pwd = passwordEncoder.encode(registerDto.getPassword());
-        Long id = IdWorker.getId();
-        int result = loginService.register(id, pwd, registerDto.getUsername());
+        Long uid = IdWorker.getId();
+        int result = loginService.register(uid, uid, pwd, registerDto.getUsername());
         if (result == 1) {
             return new Results( ).success(result);
         } else {

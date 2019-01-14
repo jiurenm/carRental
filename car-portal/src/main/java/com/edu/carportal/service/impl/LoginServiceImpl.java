@@ -25,11 +25,11 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public int register(Long id, String password, String username) {
+    public int register(Long uid, Long id, String password, String username) {
         try {
-            loginMapper.register1(id, password);
-            loginMapper.register2(id, username, username);
-            loginMapper.register3(id, id);
+            loginMapper.register1(uid, password);
+            loginMapper.register2(uid, username, username);
+            loginMapper.register3(id, uid);
         } catch (Exception e) {
             return 0;
         }
