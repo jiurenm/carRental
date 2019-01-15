@@ -23,4 +23,6 @@ public interface CustomerService {
     Role findRoleById(Long uid, Integer id);
     void deleteAuthority(Long uid, Integer rid);
     void editCustomer(CustomerDto customerDto);
+    List<Customer> blackList();
+    void cancelBlackList(Long id);
 }

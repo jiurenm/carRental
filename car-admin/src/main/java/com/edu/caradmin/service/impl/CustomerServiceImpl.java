@@ -80,4 +80,14 @@ public class CustomerServiceImpl implements CustomerService {
                 customerDto.getDriveNum(), customerDto.getDriveType(),
                 Long.valueOf(customerDto.getId()));
     }
+
+    @Override
+    public List<Customer> blackList() {
+        return adminMapper.blackList();
+    }
+
+    @Override
+    public void cancelBlackList(Long id) {
+        adminMapper.cancelBlackList(id);
+    }
 }

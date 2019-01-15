@@ -216,7 +216,7 @@ public class CustomerController {
                     return new Results().success("释放锁失败：" + lockKey + " : " + requestId);
                 }
             } catch (Exception e) {
-                return new Results().failed(e);
+                return new Results().failed(e.getMessage());
             }
         }
     }
@@ -242,7 +242,65 @@ public class CustomerController {
                     return new Results().success("释放锁失败：" + lockKey + " : " + requestId);
                 }
             } catch (Exception e) {
-                return new Results().failed(e);
+                return new Results().failed(e.getMessage());
+            }
+        }
+    }
+
+    @ApiOperation(value = "获取黑名单")
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(value = "/allBlackList", method = RequestMethod.GET)
+    public Results blackList() {
+        List<Customer> customer = customerService.blackList();
+        if (customer.isEmpty()) {
+            return new Results().success("没有记录");
+        } else {
+            return new Results().pageSuccess(customer);
+        }
+    }
+
+    @ApiOperation(value = "分页获取黑名单")
+    @ApiParam(name = "pageDto", value = "页码", required = true, type = "PageDto")
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(value = "/blackList", method = RequestMethod.POST)
+    public Results blackList(@RequestBody @Validated PageDto pageDto, BindingResult result) {
+        if (result.hasErrors()) {
+            return new Results().validateFailed(result);
+        }
+        PageHelper.startPage(pageDto.getPageNum(), pageDto.getPageSize());
+        List<Customer> customers = customerService.blackList();
+        if (customers.isEmpty()) {
+            return new Results().failed();
+        }
+        PageInfo<Customer> page = new PageInfo<>(customers);
+        return new Results().pageSuccess(page.getList());
+    }
+
+    @ApiOperation(value = "取消黑名单")
+    @ApiImplicitParam(name = "id", value = "用户id", required = true, dataType = "String")
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(value = "/cancelBlackList/{id}", method = RequestMethod.POST)
+    public Results cancelBlackList(@PathVariable String id) {
+        String lockKey = "cancelBlackList_key";
+        if (id == null) {
+            return new Results().validateFailed("id不能为空");
+        }
+        Customer customer = customerService.findCustomerById(Long.valueOf(id));
+        if (customer == null) {
+            return new Results().failed("用户不存在");
+        }
+        if (customer.getIsEnable()) {
+            return new Results().failed("不能重复操作");
+        }
+        String requestId = UUID.randomUUID().toString();
+        if (RedisTool.tryGetDistributedLock(jedis, lockKey, requestId, EXPIRE_TIME)) {
+            return new Results().failed("操作太快");
+        } else {
+            customerService.cancelBlackList(Long.valueOf(id));
+            if (RedisTool.releaseDistributedLock(jedis, lockKey, requestId)) {
+                return new Results().success(id);
+            } else {
+                return new Results().success("释放锁失败：" + lockKey + " : " + requestId);
             }
         }
     }

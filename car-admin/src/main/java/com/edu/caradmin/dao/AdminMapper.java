@@ -1,8 +1,10 @@
 package com.edu.caradmin.dao;
 
-import com.edu.caradmin.dto.CustomerDto;
+
+import com.edu.car.model.Customer;
 import org.apache.ibatis.annotations.*;
-import org.springframework.security.core.parameters.P;
+
+import java.util.List;
 
 /**
  * carRental
@@ -31,4 +33,10 @@ public interface AdminMapper {
                       @Param("tel") String tel, @Param("email") String email,
                       @Param("driveNum") String driveNum, @Param("driveType") String driveType,
                       @Param("id") Long id);
+
+    @Select("SELECT c.id,c.username,c.name,c.age,c.tel,c.email,c.driveNum,c.driveType,l.password,l.isEnable FROM car.customer c JOIN car.login l ON l.id=c.id WHERE l.isEnable=0")
+    List<Customer> blackList();
+
+    @Update("UPDATE car.login SET isEnable=1 WHERE id=#{id}")
+    void cancelBlackList(Long id);
 }
