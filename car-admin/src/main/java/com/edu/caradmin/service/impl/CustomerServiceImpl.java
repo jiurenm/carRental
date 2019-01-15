@@ -58,6 +58,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public Role showRolesById(Integer id) {
+        return customerMapper.findRolesById(id);
+    }
+
+    @Override
     public Role findRoleById(Long uid, Integer id) {
         return customerMapper.findRoleById(uid, id);
     }

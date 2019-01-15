@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 public class AuthorityDto {
     @ApiModelProperty(value = "用户id")
-    private Long uid;
+    private String uid;
     @ApiModelProperty(value = "权限id")
     private Integer rid;
 }

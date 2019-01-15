@@ -1,8 +1,6 @@
 package com.edu.car.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -15,7 +13,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Role implements Serializable {
     private String id;
+    private Integer rid;
     private String name;
 }
