@@ -7,6 +7,7 @@ import com.edu.car.model.Role;
 import com.edu.car.redis.RedisTool;
 import com.edu.car.uid.IdWorker;
 import com.edu.caradmin.dto.AuthorityDto;
+import com.edu.caradmin.dto.CustomerDto;
 import com.edu.caradmin.dto.PageDto;
 import com.edu.caradmin.service.CustomerService;
 import com.github.pagehelper.PageHelper;
@@ -220,7 +221,29 @@ public class CustomerController {
         }
     }
 
-    public Results editCustomer() {
-        return null;
+    @ApiOperation(value = "编辑信息")
+    @ApiParam(name = "CustomerDto", value = "用户", required = true, type = "CustomerDto")
+    @PreAuthorize(value = "hasRole('ADMIN')")
+    @RequestMapping(value = "/editCustomer", method = RequestMethod.POST)
+    public Results editCustomer(@RequestBody @Validated CustomerDto customerDto, BindingResult result) {
+        if (result.hasErrors()) {
+            return new Results().validateFailed(result);
+        }
+        String lockKey = "editCustomer";
+        String requestId = UUID.randomUUID().toString();
+        if (RedisTool.tryGetDistributedLock(jedis, lockKey, requestId, EXPIRE_TIME)) {
+            return new Results().failed("操作太快");
+        } else {
+            try {
+                customerService.editCustomer(customerDto);
+                if (RedisTool.releaseDistributedLock(jedis, lockKey, requestId)) {
+                    return new Results().success("成功");
+                } else {
+                    return new Results().success("释放锁失败：" + lockKey + " : " + requestId);
+                }
+            } catch (Exception e) {
+                return new Results().failed(e);
+            }
+        }
     }
 }

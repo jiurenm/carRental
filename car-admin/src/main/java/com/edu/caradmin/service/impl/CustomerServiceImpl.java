@@ -4,6 +4,7 @@ import com.edu.car.mapper.CustomerMapper;
 import com.edu.car.model.Customer;
 import com.edu.car.model.Role;
 import com.edu.caradmin.dao.AdminMapper;
+import com.edu.caradmin.dto.CustomerDto;
 import com.edu.caradmin.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,5 +71,13 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void deleteAuthority(Long uid, Integer rid) {
         adminMapper.deleteAuthority(uid, rid);
+    }
+
+    @Override
+    public void editCustomer(CustomerDto customerDto) {
+        adminMapper.editCustomer(customerDto.getName(), customerDto.getAge(),
+                customerDto.getTel(), customerDto.getEmail(),
+                customerDto.getDriveNum(), customerDto.getDriveType(),
+                Long.valueOf(customerDto.getId()));
     }
 }

@@ -2,6 +2,7 @@ package com.edu.caradmin.service;
 
 import com.edu.car.model.Customer;
 import com.edu.car.model.Role;
+import com.edu.caradmin.dto.CustomerDto;
 
 import java.util.List;
 
@@ -21,4 +22,5 @@ public interface CustomerService {
     Role showRolesById(Integer id);
     Role findRoleById(Long uid, Integer id);
     void deleteAuthority(Long uid, Integer rid);
+    void editCustomer(CustomerDto customerDto);
 }
