@@ -279,7 +279,7 @@ public class CustomerController {
     @ApiOperation(value = "取消黑名单")
     @ApiImplicitParam(name = "id", value = "用户id", required = true, dataType = "String")
     @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(value = "/cancelBlackList/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/cancelBlackList/{id}", method = RequestMethod.GET)
     public Results cancelBlackList(@PathVariable String id) {
         String lockKey = "cancelBlackList_key";
         if (id == null) {
