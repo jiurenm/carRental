@@ -6,10 +6,12 @@ import com.edu.car.model.Role;
 import com.edu.car.redis.RedisTool;
 import com.edu.car.uid.IdWorker;
 import com.edu.caradmin.dto.AuthorityDto;
+import com.edu.caradmin.dto.PageDto;
 import com.edu.caradmin.service.CustomerService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,8 @@ import java.util.UUID;
 @RestController
 public class CustomerController {
     private static final int EXPIRE_TIME = 1000;
+    private static final String ADMIN = "ROLE_ADMIN";
+    private static final String USER = "ROLE_USER";
 
     private final Jedis jedis;
     private final CustomerService customerService;
@@ -74,13 +78,13 @@ public class CustomerController {
     @ApiOperation(value = "设置黑名单")
     @ApiImplicitParam(name = "id", value = "id", required = true, dataType = "int")
     @PreAuthorize(value = "hasRole('ADMIN')")
-    @RequestMapping(value = "/setBlackList/{id}", method = RequestMethod.POST)
-    public Results setBlackList(@PathVariable Long id) {
+    @RequestMapping(value = "/setBlackList/{id}", method = RequestMethod.GET)
+    public Results setBlackList(@PathVariable String id) {
         String lockKey = "blackList_key";
         if (id == null) {
             return new Results().validateFailed("id不能为空");
         }
-        Customer customer = customerService.findCustomerById(id);
+        Customer customer = customerService.findCustomerById(Long.valueOf(id));
         if (customer == null) {
             return new Results().failed("用户不存在");
         }
@@ -91,7 +95,7 @@ public class CustomerController {
         if (RedisTool.tryGetDistributedLock(jedis, lockKey, requestId, EXPIRE_TIME)) {
             return new Results().failed("操作太快");
         } else {
-            customerService.setBlackList(id);
+            customerService.setBlackList(Long.valueOf(id));
             if (RedisTool.releaseDistributedLock(jedis, lockKey, requestId)) {
                 return new Results().success(id);
             } else {
@@ -101,23 +105,46 @@ public class CustomerController {
     }
 
     @ApiOperation(value = "分页获取用户信息")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int"),
-            @ApiImplicitParam(name = "pageSize", value = "每页数据量", required = true, dataType = "int")
-    })
+    @ApiParam(name = "pageDto", value = "页码", required = true, type = "PageDto")
     @PreAuthorize(value = "hasRole('ADMIN')")
     @RequestMapping(value = "/customerList", method = RequestMethod.POST)
-    public Results findList(Integer pageNum, Integer pageSize) {
-        if (pageNum == null || pageSize == null) {
-            return new Results().validateFailed("页码或每页数据量不能为空");
+    public Results findList(@RequestBody @Validated PageDto pageDto, BindingResult result) {
+        if (result.hasErrors()) {
+            return new Results().validateFailed(result);
         }
-        PageHelper.startPage(pageNum, pageSize);
+        PageHelper.startPage(pageDto.getPageNum(), pageDto.getPageSize());
         List<Customer> customers = customerService.showCustomers();
         if (customers.isEmpty()) {
             return new Results().failed("没有记录");
         }
         PageInfo<Customer> pageInfo = new PageInfo<>(customers);
         return new Results().pageSuccess(pageInfo.getList());
+    }
+
+    @ApiOperation(value = "获取用户权限")
+    @ApiImplicitParam(name = "id", value = "用户id", required = true, dataType = "String")
+    @PreAuthorize(value = "hasRole('ADMIN')")
+    @RequestMapping(value = "/roles/{id}", method = RequestMethod.GET)
+    public Results showRoles(@PathVariable String id) {
+        if (id == null) {
+            return new Results().validateFailed("id不能为空");
+        }
+        List<Role> roles = customerService.showRoles(Long.valueOf(id));
+        if (roles == null) {
+            return new Results().failed();
+        } else {
+            List<Role> roleList = Lists.newArrayList();
+            roles.forEach(role -> {
+                if (ADMIN.equals(role.getName())) {
+                    role.setName("管理员");
+                }
+                if (USER.equals(role.getName())) {
+                    role.setName("用户");
+                }
+                roleList.add(role);
+            });
+            return new Results().success(roleList);
+        }
     }
 
     @ApiOperation(value = "添加权限")

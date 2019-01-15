@@ -13,13 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 /**
  * carRental
@@ -47,8 +47,8 @@ public class LoginController {
 
     @ApiOperation(value = "登录接口")
     @ApiParam(name = "用户", required = true)
-    @RequestMapping(value = "/adminLogin", method = RequestMethod.POST)
-    public Results login(@RequestBody @Valid LoginDto loginDto, BindingResult result) {
+    @RequestMapping(value = "/adminLogin", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8")
+    public Results login(@RequestBody @Validated LoginDto loginDto, BindingResult result) {
         if (result.hasErrors()) {
             return new Results().validateFailed(result);
         }

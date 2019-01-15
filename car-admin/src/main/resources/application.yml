@@ -13,6 +13,11 @@ spring:
         url: http://localhost:8888
         username: admin
         password: admin
+  cache:
+    cache-names: outLimit，notOutLimit
+    caffeine:
+      spec: initialCapacity=50,maximumSize=500,expireAfterWrite=5s,refreshAfterWrite=7s
+    type: caffeine
 swagger:
   enable: true
 management:

@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Car implements Serializable {
-    private Long id;
+    private String id;
     private String name;
     private String pp;
     private String cs;

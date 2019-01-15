@@ -16,6 +16,6 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 public class Picture implements Serializable {
-    private Long pid;
+    private String pid;
     private String url;
 }

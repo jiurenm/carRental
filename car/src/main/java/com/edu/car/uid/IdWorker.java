@@ -87,11 +87,11 @@ public class IdWorker {
         return timestamp;
     }
 
-    private long timeGen() {
-        return System.currentTimeMillis();
+    public static long timeGen() {
+            return System.currentTimeMillis();
     }
 
-    private static long getWorkerId() {
+    public static long getWorkerId() {
         long machinePiece;
         StringBuilder stringBuilder = new StringBuilder();
         Enumeration<NetworkInterface> e = null;
@@ -108,7 +108,7 @@ public class IdWorker {
         return machinePiece & maxWorkerId;
     }
 
-    private static long getDataCenterId() {
+    public static long getDataCenterId() {
         RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
         return Long.valueOf(runtimeMXBean.getName().split("@")[0]) & maxDataCenterId;
     }

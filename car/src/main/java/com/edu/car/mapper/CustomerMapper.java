@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Mapper
 public interface CustomerMapper {
-    @Select("SELECT c.id,c.username,c.name,c.age,c.tel,c.email,c.driveNum,c.driveType,l.password,l.isEnable FROM car.customer c JOIN car.login l ON l.id=c.id")
+    @Select("SELECT c.id,c.username,c.name,c.age,c.tel,c.email,c.driveNum,c.driveType,l.password,l.isEnable FROM car.customer c JOIN car.login l ON l.id=c.id WHERE l.isEnable=1")
     List<Customer> showCustomers();
 
     @Select("SELECT c.id,c.username,c.name,c.age,c.tel,c.email,c.driveNum,c.driveType,l.password,l.isEnable FROM car.customer c JOIN car.login l ON l.id=c.id WHERE c.username=#{username}")

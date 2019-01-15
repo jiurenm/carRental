@@ -39,7 +39,7 @@ public class JwtTokenUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(generateExpirationDate())
-                .signWith(SignatureAlgorithm.HS512,secret)
+                .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 
@@ -113,8 +113,8 @@ public class JwtTokenUtil {
      */
     public String generateToken(UserDetails userDetails) {
         Map<String,Object> claims = Maps.newHashMap();
-        claims.put(CLAIM_KEY_USERNAME,userDetails.getUsername());
-        claims.put(CLAIM_KEY_CREATED,new Date());
+        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
+        claims.put(CLAIM_KEY_CREATED, new Date());
         return generateToken(claims);
     }
 
@@ -132,7 +132,7 @@ public class JwtTokenUtil {
      */
     public String refreshToken(String token) {
         Claims claims = getClaimsFromToken(token);
-        Objects.requireNonNull(claims).put(CLAIM_KEY_CREATED,new Date());
+        Objects.requireNonNull(claims).put(CLAIM_KEY_CREATED, new Date());
         return generateToken(claims);
     }
 }

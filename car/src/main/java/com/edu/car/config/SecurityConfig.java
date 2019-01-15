@@ -73,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 customer = customerMapper.findCustomerByDriveNum(username);
             }
             if (customer != null) {
-                return new AdminDetails(customer,customerMapper.findRoles(customer.getId()));
+                return new AdminDetails(customer,customerMapper.findRoles(Long.valueOf(customer.getId())));
             }
             throw new UsernameNotFoundException("用户名或密码错误");
         };

@@ -16,6 +16,6 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 public class Role implements Serializable {
-    private Long id;
+    private String id;
     private String name;
 }

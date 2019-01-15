@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 public class Customer implements Serializable {
-    private Long id;
+    private String id;
     private String username;
     private String name;
     private Integer age;
