@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class Role implements Serializable {
     private String id;
     private Integer rid;

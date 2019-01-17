@@ -7,6 +7,8 @@ spring:
     nacos:
       config:
         server-addr: 127.0.0.1:8848
+      discovery:
+        server-addr: 127.0.0.1:8848
   boot:
     admin:
       client:
@@ -14,7 +16,7 @@ spring:
         username: admin
         password: admin
   cache:
-    cache-names: outLimit，notOutLimit
+    cache-names: cars，customers
     caffeine:
       spec: initialCapacity=50,maximumSize=500,expireAfterWrite=5s,refreshAfterWrite=7s
     type: caffeine

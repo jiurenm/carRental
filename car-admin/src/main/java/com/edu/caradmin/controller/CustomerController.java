@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * carRental
@@ -136,16 +137,17 @@ public class CustomerController {
         if (roles == null) {
             return new Results().failed();
         } else {
-            List<Role> roleList = Lists.newArrayList();
-            roles.forEach(role -> {
+            List<Role> roleList = roles.stream().map((role) -> {
                 if (ADMIN.equals(role.getName())) {
                     role.setName("管理员");
+                    return role;
                 }
                 if (USER.equals(role.getName())) {
                     role.setName("用户");
+                    return role;
                 }
-                roleList.add(role);
-            });
+                return role;
+            }).collect(Collectors.toList());
             return new Results().success(roleList);
         }
     }
