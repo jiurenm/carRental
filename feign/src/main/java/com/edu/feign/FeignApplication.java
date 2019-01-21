@@ -26,4 +26,5 @@ public class FeignApplication {
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }
+
 }

@@ -1,6 +1,6 @@
 package com.edu.feign.controller;
 
-import com.edu.car.dto.Results;
+import com.edu.feign.dto.Results;
 import com.edu.feign.service.AdminClient;
 import feign.Headers;
 import org.springframework.beans.factory.annotation.Autowired;

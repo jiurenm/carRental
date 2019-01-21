@@ -1,7 +1,7 @@
 package com.edu.feign.service;
 
-import com.edu.car.dto.LoginDto;
-import com.edu.car.dto.Results;
+import com.edu.feign.dto.LoginDto;
+import com.edu.feign.dto.Results;
 import com.edu.feign.service.hystric.AdminClientFallBack;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;

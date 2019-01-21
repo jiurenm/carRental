@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 
 /**
- * carRental
+ * CustomerMapper
  *
  * @author Administrator
  * @date 2018/12/29 22:17

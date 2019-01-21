@@ -56,10 +56,6 @@ public class CarAdminApplicationTests {
 
     @Test
     public void test() {
-        System.out.println(IdWorker.getId());
-        System.out.println(IdWorker.timeGen());
-        System.out.println(IdWorker.getDataCenterId());
-        System.out.println(IdWorker.getWorkerId());
     }
 }
 

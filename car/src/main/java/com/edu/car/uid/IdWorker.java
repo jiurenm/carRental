@@ -5,6 +5,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.time.Clock;
 import java.util.Enumeration;
 import java.util.Objects;
 
@@ -87,11 +88,11 @@ public class IdWorker {
         return timestamp;
     }
 
-    public static long timeGen() {
-            return System.currentTimeMillis();
+    private static long timeGen() {
+        return Clock.systemDefaultZone().millis();
     }
 
-    public static long getWorkerId() {
+    private static long getWorkerId() {
         long machinePiece;
         StringBuilder stringBuilder = new StringBuilder();
         Enumeration<NetworkInterface> e = null;
@@ -108,7 +109,7 @@ public class IdWorker {
         return machinePiece & maxWorkerId;
     }
 
-    public static long getDataCenterId() {
+    private static long getDataCenterId() {
         RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
         return Long.valueOf(runtimeMXBean.getName().split("@")[0]) & maxDataCenterId;
     }

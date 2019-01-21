@@ -1,7 +1,7 @@
 package com.edu.feign.service.hystric;
 
-import com.edu.car.dto.LoginDto;
-import com.edu.car.dto.Results;
+import com.edu.feign.dto.LoginDto;
+import com.edu.feign.dto.Results;
 import com.edu.feign.service.AdminClient;
 import org.springframework.stereotype.Component;
 

@@ -33,16 +33,12 @@
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+            <artifactId>spring-cloud-alibaba-nacos-discovery</artifactId>
+            <version>0.2.0.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.edu.car</groupId>
-            <artifactId>car</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <!-- lombok -->
@@ -50,6 +46,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>5.1.8</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
