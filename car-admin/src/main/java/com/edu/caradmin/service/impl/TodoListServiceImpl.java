@@ -30,29 +30,29 @@ public class TodoListServiceImpl implements TodoListService {
     }
 
     @Override
-    public void addTodoList(TodoListDto todoListDto) {
-        todoMapper.addTodoList(Long.valueOf(todoListDto.getId()), todoListDto.getTitle(),
+    public int addTodoList(TodoListDto todoListDto) {
+        return todoMapper.addTodoList(Long.valueOf(todoListDto.getId()), todoListDto.getTitle(),
                 todoListDto.getStatus(), Long.valueOf(todoListDto.getUid()));
 
     }
 
     @Override
-    public void deleteTodoList(Long id) {
-        todoMapper.deleteTodoList(id);
+    public int deleteTodoList(Long id) {
+        return todoMapper.deleteTodoList(id);
     }
 
     @Override
-    public void updateTodoList(TodoListDto todoListDto) {
-        todoMapper.updateTodoList(todoListDto.getTitle(), Long.valueOf(todoListDto.getId()));
+    public int updateTodoList(TodoListDto todoListDto) {
+        return todoMapper.updateTodoList(todoListDto.getTitle(), Long.valueOf(todoListDto.getId()));
     }
 
     @Override
-    public void editTodoList(Long id) {
-        todoMapper.editTodoList(id);
+    public int editTodoList(Long id) {
+        return todoMapper.editTodoList(id);
     }
 
     @Override
-    public void editTodoListB(Long id) {
-        todoMapper.editTodoListB(id);
+    public int editTodoListB(Long id) {
+        return todoMapper.editTodoListB(id);
     }
 }

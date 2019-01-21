@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * carRental
+ * CarController
  *
  * @author Administrator
  * @date 2018/12/29 17:44

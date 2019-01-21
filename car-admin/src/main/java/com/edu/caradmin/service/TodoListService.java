@@ -13,9 +13,9 @@ import java.util.List;
  */
 public interface TodoListService {
     List<TodoList> todoList(Long uid);
-    void addTodoList(TodoListDto todoListDto);
-    void deleteTodoList(Long id);
-    void updateTodoList(TodoListDto todoListDto);
-    void editTodoList(Long id);
-    void editTodoListB(Long id);
+    int addTodoList(TodoListDto todoListDto);
+    int deleteTodoList(Long id);
+    int updateTodoList(TodoListDto todoListDto);
+    int editTodoList(Long id);
+    int editTodoListB(Long id);
 }

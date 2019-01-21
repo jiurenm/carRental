@@ -8,6 +8,7 @@ import com.edu.car.util.JwtTokenUtil;
 import com.edu.caradmin.dto.TodoListDto;
 import com.edu.caradmin.service.CustomerService;
 import com.edu.caradmin.service.TodoListService;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.util.List;
  * @author Administrator
  * @date 2019/1/17 10:29
  */
+@Api(value = "TodoController", description = "待办事项")
 @RestController
 @RequestMapping(value = "/todoList")
 public class TodoController {
@@ -43,6 +45,7 @@ public class TodoController {
         this.customerService = customerService;
     }
 
+    @ApiOperation(value = "获取待办事项")
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Results todoList(HttpServletRequest request) {
         String username = jwtTokenUtil.getUsernameFromToken(request.getHeader(this.tokenHeader).substring(this.tokenHead.length()));
@@ -55,64 +58,69 @@ public class TodoController {
         return new Results().pageSuccess(todoList);
     }
 
+    @ApiOperation(value = "添加待办事项")
+    @ApiParam(name = "todoListDto", value = "待办事项", required = true, type = "TodoListDto")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Results addTodoList(@RequestBody TodoListDto todoListDto, HttpServletRequest request) {
         Customer customer = customerService.findCustomerByName(jwtTokenUtil.getUsernameFromToken(request.getHeader(this.tokenHeader).substring(this.tokenHead.length())));
         todoListDto.setUid(customer.getId());
         todoListDto.setId(String.valueOf(IdWorker.getId()));
         todoListDto.setStatus(false);
-        try {
-            todoListService.addTodoList(todoListDto);
-            return new Results().success("");
-        } catch (Exception e) {
-            return new Results().failed(e.getMessage());
+        int result = todoListService.addTodoList(todoListDto);
+        if (result == 1) {
+            return new Results().success(result);
+        } else {
+            return new Results().failed();
         }
     }
 
+    @ApiOperation(value = "编辑待办事项")
     @RequestMapping(value = "/edit/{id}/{status}", method = RequestMethod.GET)
     public Results editTodoList(@PathVariable Long id, @PathVariable String status) {
         if (id == null || status == null) {
             return new Results().validateFailed("id不能为空");
         }
         if (TRUE.equals(status)) {
-            try {
-                todoListService.editTodoList(id);
-                return new Results().success("");
-            } catch (Exception e) {
-                return new Results( ).failed(e.getMessage( ));
+            int result = todoListService.editTodoList(id);
+            if (result == 1) {
+                return new Results().success(result);
+            } else {
+                return new Results().failed();
             }
         } else {
-            try {
-                todoListService.editTodoListB(id);
-                return new Results().success("");
-            } catch (Exception e) {
-                return new Results( ).failed(e.getMessage( ));
+            int result = todoListService.editTodoListB(id);
+            if (result == 1) {
+                return new Results().success(result);
+            } else {
+                return new Results().failed();
             }
         }
     }
 
+    @ApiOperation(value = "删除待办事项")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public Results deleteTodoList(@PathVariable Long id) {
         if (id == null) {
             return new Results().validateFailed("id不能为空");
         }
-        try {
-            todoListService.deleteTodoList(id);
-            return new Results().success("删除成功");
-        } catch (Exception e) {
-            return new Results().failed(e.getMessage());
+        int result = todoListService.deleteTodoList(id);
+        if (result == 1) {
+            return new Results().success(result);
+        } else {
+            return new Results().failed();
         }
     }
 
+    @ApiOperation(value = "更新待办事项")
     @RequestMapping(value = "/update")
     public Results updateTodoList(@RequestBody TodoListDto todoListDto, HttpServletRequest request) {
         Customer customer = customerService.findCustomerByName(jwtTokenUtil.getUsernameFromToken(request.getHeader(this.tokenHeader).substring(this.tokenHead.length())));
         todoListDto.setUid(customer.getId());
-        try {
-            todoListService.updateTodoList(todoListDto);
-            return new Results().success("更新成功");
-        } catch (Exception e) {
-            return new Results().failed(e);
+        int result = todoListService.updateTodoList(todoListDto);
+        if (result == 1) {
+            return new Results().success(result);
+        } else {
+            return new Results().failed();
         }
     }
 }

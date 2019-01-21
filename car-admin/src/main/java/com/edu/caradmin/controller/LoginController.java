@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * carRental
+ * LoginController
  *
  * @author Administrator
  * @date 2018/12/29 23:09
