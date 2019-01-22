@@ -1,5 +1,6 @@
 package com.edu.car.aop;
 
+import com.edu.car.dto.Results;
 import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -71,7 +72,10 @@ public class Log {
         LOGGER.info("CLASS_METHOD:" + joinPoint.getSignature().getDeclaringTypeName() +
                 "." + joinPoint.getSignature().getName());
         logInfo = this.getBasicDBObject(request, joinPoint, time);
-        listenableFuture = executorService.submit(() -> {});
+        listenableFuture = executorService.submit(() -> {
+            LOGGER.info("写入mongodb");
+            logInfo.append("请求结束", LocalDateTime.now());
+        });
     }
 
     @After("webLog()")
@@ -83,7 +87,16 @@ public class Log {
     public void doAfterReturning(Object ret) {
         LOGGER.info("返回：" + ret);
         LOGGER.info("耗时" + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
-        listenableFuture.addListener(() -> log.info(logInfo), executorService);
+        listenableFuture.addListener(() -> {
+            String code = String.valueOf(((Results)ret).getCode());
+            String message = ((Results)ret).getMessage();
+            String data = ((Results)ret).getData().toString();
+            logInfo.append("返回：", "");
+            logInfo.append("  code", code);
+            logInfo.append("  message", message);
+            logInfo.append("  data", data);
+            log.info(logInfo);
+        }, executorService);
     }
 
     private BasicDBObject getBasicDBObject(HttpServletRequest request, JoinPoint joinPoint, LocalDateTime time) {

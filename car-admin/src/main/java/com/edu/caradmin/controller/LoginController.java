@@ -1,6 +1,7 @@
 package com.edu.caradmin.controller;
 
 import com.edu.car.dto.Results;
+import com.edu.caradmin.annotation.RateLimit;
 import com.edu.caradmin.dto.LoginDto;
 import com.edu.caradmin.service.AdminService;
 import com.google.common.base.Strings;
@@ -44,6 +45,7 @@ public class LoginController {
 
     @ApiOperation(value = "登录接口")
     @ApiParam(name = "用户", required = true)
+    @RateLimit(limitNum = 10)
     @RequestMapping(value = "/adminLogin", method = RequestMethod.POST, consumes = "application/json;charset=UTF-8")
     public Results login(@RequestBody @Validated LoginDto loginDto, BindingResult result) {
         if (result.hasErrors()) {

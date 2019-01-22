@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8082
 spring:
   application:
     name: CAR-ADMIN
@@ -21,7 +21,7 @@ spring:
       spec: initialCapacity=50,maximumSize=500,expireAfterWrite=5s,refreshAfterWrite=7s
     type: caffeine
 swagger:
-  enable: true
+  enable: false
 management:
   endpoints:
     web:
