@@ -6,7 +6,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.mongodb.BasicDBObject;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
@@ -21,6 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -38,25 +38,17 @@ public class Log {
     private final static Logger log = Logger.getLogger("mongodb");
     private final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger(Log.class);
 
-    private Stopwatch stopwatch;
-
-    private ListeningExecutorService executorService = MoreExecutors.listeningDecorator(
-            new ScheduledThreadPoolExecutor(2,
-                    new BasicThreadFactory.Builder().namingPattern("schedule-pool-%d").daemon(true).build())
-    );
-
-    private ListenableFuture listenableFuture;
-    private BasicDBObject logInfo;
+    private Map<Long, BasicDBObject> logs = Maps.newConcurrentMap();
 
     @Pointcut("execution(public * com.edu.*.controller.*.*(..))")
     public void webLog() {}
 
     @Before("webLog()")
     public void doBefore(JoinPoint joinPoint) {
-        stopwatch = Stopwatch.createStarted();
-        LocalDateTime time = LocalDateTime.now();
         Signature signature = joinPoint.getSignature();
+        Long num = IdWorker.getId();
         LOGGER.info("请求处理");
+        LocalDateTime time = LocalDateTime.now();
         LOGGER.info("方法:" + signature.getName());
         LOGGER.info("方法所在包:" + signature.getDeclaringTypeName());
         signature.getDeclaringType();
@@ -71,11 +63,8 @@ public class Log {
         LOGGER.info("IP:" + request.getRemoteAddr());
         LOGGER.info("CLASS_METHOD:" + joinPoint.getSignature().getDeclaringTypeName() +
                 "." + joinPoint.getSignature().getName());
-        logInfo = this.getBasicDBObject(request, joinPoint, time);
-        listenableFuture = executorService.submit(() -> {
-            LOGGER.info("写入mongodb");
-            logInfo.append("请求结束", LocalDateTime.now());
-        });
+        BasicDBObject logInfo = this.getBasicDBObject(request, joinPoint, time, num);
+        logs.put(num, logInfo);
     }
 
     @After("webLog()")
@@ -86,22 +75,18 @@ public class Log {
     @AfterReturning(pointcut = "webLog()", returning = "ret")
     public void doAfterReturning(Object ret) {
         LOGGER.info("返回：" + ret);
-        LOGGER.info("耗时" + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
-        listenableFuture.addListener(() -> {
-            String code = String.valueOf(((Results)ret).getCode());
-            String message = ((Results)ret).getMessage();
-            String data = ((Results)ret).getData().toString();
-            logInfo.append("返回：", "");
-            logInfo.append("  code", code);
-            logInfo.append("  message", message);
-            logInfo.append("  data", data);
-            log.info(logInfo);
-        }, executorService);
+        synchronized(this) {
+            Long num = (Long) getMinKey(logs);
+            BasicDBObject logInfo = logs.get(num);
+            this.write(logInfo, ret);
+            logs.remove(num);
+        }
     }
 
-    private BasicDBObject getBasicDBObject(HttpServletRequest request, JoinPoint joinPoint, LocalDateTime time) {
+    private BasicDBObject getBasicDBObject(HttpServletRequest request, JoinPoint joinPoint, LocalDateTime time, Long id) {
         BasicDBObject object = new BasicDBObject();
         Signature signature = joinPoint.getSignature();
+        object.append("_id", id);
         object.append("请求时间", time);
         object.append("方法", signature.getName());
         object.append("方法所在包", signature.getDeclaringTypeName());
@@ -117,4 +102,25 @@ public class Log {
                 "." + joinPoint.getSignature().getName());
         return object;
     }
+
+    private void write(BasicDBObject logInfo, Object ret) {
+        logInfo.append("返回：", "");
+        logInfo.append("  code", String.valueOf(((Results)ret).getCode()));
+        logInfo.append("  message", ((Results)ret).getMessage());
+        logInfo.append("  data", ((Results)ret).getData().toString());
+        logInfo.append("请求结束", LocalDateTime.now());
+        LOGGER.info("写入mongodb");
+        log.info(logInfo);
+    }
+
+    private static Object getMinKey(Map<Long, BasicDBObject> map) {
+        if (map == null) {
+            return null;
+        }
+        Set<Long> set = map.keySet();
+        Object[] obj = set.toArray();
+        Arrays.sort(obj);
+        return obj[0];
+    }
+
 }
