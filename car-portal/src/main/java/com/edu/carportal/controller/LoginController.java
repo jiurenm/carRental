@@ -35,11 +35,6 @@ public class LoginController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    private ListeningExecutorService executorService = MoreExecutors.listeningDecorator(
-            new ScheduledThreadPoolExecutor(2,
-                    new BasicThreadFactory.Builder().namingPattern("schedule-pool-%d").daemon(true).build())
-    );
-
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Results register(@RequestBody @Validated RegisterDto registerDto) {
         Customer customer = loginService.findCustomerByName(registerDto.getUsername());
