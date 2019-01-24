@@ -63,38 +63,47 @@ public class CustomerServiceImpl implements CustomerService {
         String lockKey = "blackList_key";
         String requestId = UUID.randomUUID().toString();
         if (RedisTool.tryGetDistributedLock(jedis, lockKey, requestId, EXPIRE_TIME)) {
-            return 2;
+            throw new RuntimeException("操作太快");
         } else {
-            int result = adminMapper.setBlackList(id);
+            int result = 0;
+            try {
+                result = adminMapper.setBlackList(id);
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
             if (RedisTool.releaseDistributedLock(jedis, lockKey, requestId)) {
                 return result;
             } else {
                 log.error("释放锁失败:" + lockKey + "," + requestId);
-                return 3;
+                throw new RuntimeException("释放锁失败");
             }
         }
     }
 
     @Override
     public int addAuthority(List<AuthorityDto> authorityDto) {
-        Long id = IdWorker.getId();
         String lockKey = "addAuthority_key";
         String requestId = UUID.randomUUID().toString();
         if (RedisTool.tryGetDistributedLock(jedis, lockKey, requestId, EXPIRE_TIME)) {
-            return 2;
+            throw new RuntimeException("操作太快");
         } else {
-            authorityDto.forEach(authority -> {
-                Role role = this.findRoleById(Long.valueOf(authority.getUid()), authority.getRid());
-                if (role != null) {
-                    return;
-                }
-                adminMapper.addAuthority(id, Long.valueOf(authority.getUid()), authority.getRid());
-            });
+            Long id = IdWorker.getId();
+            try {
+                authorityDto.forEach(authority -> {
+                    Role role = this.findRoleById(Long.valueOf(authority.getUid( )), authority.getRid( ));
+                    if (role != null) {
+                        return;
+                    }
+                    adminMapper.addAuthority(id, Long.valueOf(authority.getUid( )), authority.getRid( ));
+                });
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
             if (RedisTool.releaseDistributedLock(jedis, lockKey, requestId)) {
                 return 1;
             } else {
                 log.error("释放锁失败:" + lockKey + "," + requestId);
-                return 3;
+                throw new RuntimeException("释放锁失败");
             }
         }
     }
@@ -125,20 +134,20 @@ public class CustomerServiceImpl implements CustomerService {
         Set<Role> roleSet = Sets.newConcurrentHashSet(roles);
         ImmutableList<Role> difference = Sets.difference(roleSet, set).immutableCopy().asList();
         if (difference.isEmpty()) {
-            return 4;
+            throw new RuntimeException("没有相关权限");
         }
         String lockKey = "deleteAuthority_key";
         String requestId = UUID.randomUUID().toString();
         if (RedisTool.tryGetDistributedLock(jedis, lockKey, requestId, EXPIRE_TIME)) {
-            return 2;
+            throw new RuntimeException("操作太快");
         } else {
             AtomicInteger result = new AtomicInteger( );
-            difference.forEach(role -> result.set(adminMapper.deleteAuthority(Long.valueOf(role.getId( )), role.getRid( ))));
+            difference.forEach(role -> result.set(adminMapper.deleteAuthority(Long.valueOf(role.getId()), role.getRid())));
             if (RedisTool.releaseDistributedLock(jedis, lockKey, requestId)) {
-                return result.intValue();
+                return 1;
             } else {
                 log.error("释放锁失败:" + lockKey + "," + requestId);
-                return 3;
+                throw new RuntimeException("释放锁失败");
             }
         }
     }
@@ -148,7 +157,7 @@ public class CustomerServiceImpl implements CustomerService {
         String lockKey = "editCustomer_key";
         String requestId = UUID.randomUUID().toString();
         if (RedisTool.tryGetDistributedLock(jedis, lockKey, requestId, EXPIRE_TIME)) {
-            return 2;
+            throw new RuntimeException("操作太快");
         } else {
             int result = adminMapper.editCustomer(customerDto.getName(), customerDto.getAge(),
                     customerDto.getTel(), customerDto.getEmail(),
@@ -158,7 +167,7 @@ public class CustomerServiceImpl implements CustomerService {
                 return result;
             } else {
                 log.error("释放锁失败:" + lockKey + "," + requestId);
-                return 3;
+                throw new RuntimeException("释放锁失败");
             }
         }
     }
@@ -173,14 +182,14 @@ public class CustomerServiceImpl implements CustomerService {
         String lockKey = "cancelBlackList_key";
         String requestId = UUID.randomUUID().toString();
         if (RedisTool.tryGetDistributedLock(jedis, lockKey, requestId, EXPIRE_TIME)) {
-            return 2;
+            throw new RuntimeException("操作太快");
         } else {
             int result = adminMapper.cancelBlackList(id);
             if (RedisTool.releaseDistributedLock(jedis, lockKey, requestId)) {
                 return result;
             } else {
                 log.error("释放锁失败:" + lockKey + "," + requestId);
-                return 3;
+                throw new RuntimeException("释放锁失败");
             }
         }
     }

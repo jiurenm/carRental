@@ -75,11 +75,17 @@ public class CustomerController {
     @PreAuthorize(value = "hasRole('ADMIN')")
     @RequestMapping(value = "/setBlackList/{id}", method = RequestMethod.GET)
     public Results setBlackList(@PathVariable String id) {
-        if (this.findCustomerById(id).equals(1)) {
-            return (Results) this.findCustomerById(id);
-        }
-        int result = customerService.setBlackList(Long.valueOf(id));
-        return this.result(result);
+        Optional<Customer> customer = getCustomer(id);
+        Results results = new Results();
+        customer.ifPresent(c -> {
+            if (c.getIsEnable()) {
+                int result = customerService.setBlackList(Long.valueOf(id));
+                results.success(result);
+            } else {
+                results.failed("不能重复操作");
+            }
+        });
+        return results;
     }
 
     @ApiOperation(value = "分页获取用户信息")
@@ -104,11 +110,8 @@ public class CustomerController {
     @PreAuthorize(value = "hasRole('ADMIN')")
     @RequestMapping(value = "/roles/{id}", method = RequestMethod.GET)
     public Results showRoles(@PathVariable String id) {
-        if (id == null) {
-            return new Results().validateFailed("id不能为空");
-        }
-        List<Role> roles = customerService.showRoles(Long.valueOf(id));
-        if (roles == null) {
+        List<Role> roles = Optional.ofNullable(id).map(a -> customerService.showRoles(Long.valueOf(a))).get();
+        if (roles.isEmpty()) {
             return new Results().failed();
         } else {
             List<Role> roleList = roles.stream().map((role) -> {
@@ -132,7 +135,11 @@ public class CustomerController {
     @RequestMapping(value = "/addAuthority", method = RequestMethod.POST)
     public Results addAuthority(@RequestBody String authorityDto) {
         List<AuthorityDto> authorityList = JSONObject.parseArray(authorityDto, AuthorityDto.class);
-        return this.result(customerService.addAuthority(authorityList));
+        int result = customerService.addAuthority(authorityList);
+        if (result > 0) {
+            return new Results().success(result);
+        }
+        return new Results().failed();
     }
 
     @ApiOperation(value = "删除权限")
@@ -142,7 +149,10 @@ public class CustomerController {
     public Results deleteAuthority(@RequestBody String authorityDto) {
         List<AuthorityDto> authorityList = JSONObject.parseArray(authorityDto, AuthorityDto.class);
         int result = customerService.deleteAuthority(authorityList);
-        return this.result(result);
+        if (result > 0) {
+            return new Results().success(result);
+        }
+        return new Results().failed();
     }
 
     @ApiOperation(value = "编辑信息")
@@ -154,7 +164,10 @@ public class CustomerController {
             return new Results().validateFailed(result);
         }
         int result1 = customerService.editCustomer(customerDto);
-        return this.result(result1);
+        if (result1 > 0) {
+            return new Results().success(result);
+        }
+        return new Results().failed();
     }
 
     @ApiOperation(value = "获取黑名单")
@@ -191,39 +204,22 @@ public class CustomerController {
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/cancelBlackList/{id}", method = RequestMethod.GET)
     public Results cancelBlackList(@PathVariable String id) {
-        if (this.findCustomerById(id).equals(1)) {
-            return (Results) this.findCustomerById(id);
-        }
-        int result = customerService.cancelBlackList(Long.valueOf(id));
-        return this.result(result);
+        Optional<Customer> customer = getCustomer(id);
+        Results results = new Results();
+        customer.ifPresent(c -> {
+            if (c.getIsEnable()) {
+                int result = customerService.cancelBlackList(Long.valueOf(id));
+                results.success(result);
+            } else {
+                results.failed("不能重复操作");
+            }
+        });
+        return results;
     }
 
-    private Results result(int result) {
-        switch (result) {
-            case 1:
-                return new Results().success(result);
-            case 2:
-                return new Results().failed("操作太快");
-            case 3:
-                return new Results().success("释放锁失败");
-            case 4:
-                return new Results().failed("没有相关权限");
-            default:
-                return new Results().failed();
-        }
-    }
-
-    private Object findCustomerById(String id) {
-        if (id == null) {
-            return new Results().validateFailed("id不能为空");
-        }
-        Customer customer = customerService.findCustomerById(Long.valueOf(id));
-        if (customer == null) {
-            return new Results().failed("用户不存在");
-        }
-        if (customer.getIsEnable()) {
-            return new Results().failed("不能重复操作");
-        }
-        return 1;
+    private Optional<Customer> getCustomer(@PathVariable String id) {
+        Optional<Customer> customer = Optional.of(id).map(a -> customerService.findCustomerById(Long.valueOf(a)));
+        customer.orElseThrow(() -> new RuntimeException("用户不存在"));
+        return customer;
     }
 }

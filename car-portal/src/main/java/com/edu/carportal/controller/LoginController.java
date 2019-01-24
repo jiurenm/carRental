@@ -5,9 +5,6 @@ import com.edu.car.model.Customer;
 import com.edu.car.uid.IdWorker;
 import com.edu.carportal.dto.RegisterDto;
 import com.edu.carportal.service.LoginService;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
@@ -15,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 /**
  * carRental

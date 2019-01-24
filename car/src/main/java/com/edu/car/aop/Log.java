@@ -83,6 +83,18 @@ public class Log {
         }
     }
 
+    @AfterThrowing(pointcut = "webLog()", throwing = "e")
+    public void doAfterThrowing(Throwable e) {
+        synchronized (this) {
+            log.info("***异常!!!***");
+            log.info("异常信息：" + e.getMessage());
+            log.info("原因：" + e);
+            BasicDBObject logInfo = logQueue.remove( );
+            logInfo.append("异常", e.getMessage());
+            logger.info(logInfo);
+        }
+    }
+
     private BasicDBObject getBasicDBObject(HttpServletRequest request, JoinPoint joinPoint, LocalDateTime time, Long id) {
         BasicDBObject object = new BasicDBObject();
         Signature signature = joinPoint.getSignature();

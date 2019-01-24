@@ -20,10 +20,11 @@ public interface CarMapper {
      *
      * @return 汽车信息列表
      */
-    @Select("SELECT c.`id`,c.`name`,c.`pp`,c.`cs`,c.`ndk`,c.`pzk`,c.`picture` FROM car.car c")
+    @Select("SELECT c.`id`,c.`name`,c.`cx`,c.`pp`,c.`cs`,c.`ndk`,c.`pzk`,c.`picture` FROM car.car c")
     @Results({
             @Result(id=true,property = "id",column = "id"),
             @Result(property = "name",column = "name"),
+            @Result(property = "cx",column = "cx"),
             @Result(property = "pp",column = "pp"),
             @Result(property = "cs",column = "cs"),
             @Result(property = "ndk",column = "ndk"),

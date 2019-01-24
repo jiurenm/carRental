@@ -19,6 +19,7 @@ import java.util.List;
 public class Car implements Serializable {
     private String id;
     private String name;
+    private String cx;
     private String pp;
     private String cs;
     private String ndk;
