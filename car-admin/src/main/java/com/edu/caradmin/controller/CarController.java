@@ -5,6 +5,7 @@ import com.edu.car.model.Car;
 import com.edu.caradmin.dto.CarTypeDto;
 import com.edu.caradmin.dto.PageDto;
 import com.edu.caradmin.service.CarService;
+import com.edu.caradmin.util.OssUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -69,6 +71,11 @@ public class CarController {
         } else {
             return new Results().failed();
         }
+    }
+
+    @RequestMapping(value = "/addPicture", method = RequestMethod.POST)
+    public Object addPicture(MultipartFile file) {
+        return OssUtil.getUrl(file);
     }
 
     @ApiOperation(value = "删除车型")

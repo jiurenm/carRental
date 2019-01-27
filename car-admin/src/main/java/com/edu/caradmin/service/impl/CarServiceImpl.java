@@ -3,6 +3,7 @@ package com.edu.caradmin.service.impl;
 import com.edu.car.mapper.CarMapper;
 import com.edu.car.model.Car;
 import com.edu.car.model.CarDetail;
+import com.edu.car.model.Picture;
 import com.edu.car.redis.RedisTool;
 import com.edu.car.uid.IdWorker;
 import com.edu.caradmin.dao.CarTypeMapper;
@@ -57,7 +58,7 @@ public class CarServiceImpl implements CarService {
         String lockKey = "addType_key";
         String required = UUID.randomUUID().toString();
         CarDetail carDetails = carTypeDto.getCarDetail().get(0);
-        MultipartFile[] file = carTypeDto.getPictures();
+        List<Picture> pictures = carTypeDto.getPictures();
         if (RedisTool.tryGetDistributedLock(jedis, lockKey, required, EXPIRE_TIME)) {
             throw new RuntimeException("操作太快");
         } else {
@@ -72,10 +73,9 @@ public class CarServiceImpl implements CarService {
                         carDetails.getFdjjqxs(), carDetails.getTc(), carDetails.getYxrl(), carDetails.getYx(),
                         carDetails.getZy(), carDetails.getDcld(), carDetails.getQn(), carDetails.getDvd(),
                         carDetails.getGps());
-                for (int i=0; i<file.length; i++) {
-                    Long pictureId = IdWorker.getId();
-                    String url = OssUtil.getUrl(file[i]);
-                    carTypeMapper.addPic(pictureId, url, id, i);
+                for (int i=0;i<pictures.size();i++) {
+                    Long pid = IdWorker.getId();
+                    carTypeMapper.addPic(pid, pictures.get(i).getUrl(), id, i);
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());

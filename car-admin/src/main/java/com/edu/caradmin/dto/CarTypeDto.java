@@ -1,8 +1,8 @@
 package com.edu.caradmin.dto;
 
 import com.edu.car.model.CarDetail;
+import com.edu.car.model.Picture;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
@@ -25,5 +25,5 @@ public class CarTypeDto {
     private String pzk;
     private String picture;
     private List<CarDetail> carDetail;
-    private MultipartFile[] pictures;
+    private List<Picture> pictures;
 }
