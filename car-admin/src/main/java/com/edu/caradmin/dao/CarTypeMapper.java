@@ -63,7 +63,7 @@ public interface CarTypeMapper {
     @Update("UPDATE car.car_detail d SET d.zws=#{zws},d.cms=#{cms},d.rllx=#{rllx},d.bsxlx=#{bsxlx}," +
             " d.pl=#{pl},d.ry=#{ry},d.qdfs=#{qdfs},d.fdjjqxs=#{fdjjqxs},d.tc=#{tc},d.yxrl=#{yxrl}," +
             " d.yx=#{yx},d.zy=#{zy},d.dcld=#{dcld},d.qn=#{qn},d.dvd=#{dvd},d.gps=#{gps} WHERE d.id=#{id}")
-    void updateDetail(@Param("id") Long id, @Param("zws") String zws, @Param("cms") String cms, @Param("rllx") String rllx,
+    void updateDetail(@Param("id") Long id, @Param("zws") Integer zws, @Param("cms") Integer cms, @Param("rllx") String rllx,
                       @Param("bsxlx") String bsxlx, @Param("pl") String pl, @Param("ry") String ry,
                       @Param("qdfs") String qdfs, @Param("fdjjqxs") String fdjjqxs, @Param("tc") String tc,
                       @Param("yxrl") String yxrl, @Param("yx") String yx, @Param("zy") String zy,

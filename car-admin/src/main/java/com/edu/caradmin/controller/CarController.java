@@ -2,6 +2,7 @@ package com.edu.caradmin.controller;
 
 import com.edu.car.dto.Results;
 import com.edu.car.model.Car;
+import com.edu.car.model.CarDetail;
 import com.edu.caradmin.dto.CarTypeDto;
 import com.edu.caradmin.dto.PageDto;
 import com.edu.caradmin.service.CarService;
@@ -63,6 +64,20 @@ public class CarController {
         }
     }
 
+    @ApiOperation(value = "获取车型细节")
+    @ApiImplicitParam(name = "id", value = "车型id", required = true, type = "String")
+    @RequestMapping(value = "/details/{id}", method = RequestMethod.GET)
+    public Results showDetails(@PathVariable String id) {
+        CarDetail detail = carService.showDetail(Long.valueOf(id));
+        if (detail != null) {
+            return new Results().success(detail);
+        } else {
+            return new Results().failed("没有记录");
+        }
+    }
+
+    @ApiOperation(value = "添加车型")
+    @ApiParam(name = "carTypeDto", value = "车型", required = true, type = "CarTypeDto")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Results addCarType(@RequestBody CarTypeDto carTypeDto) {
         int result = carService.addType(carTypeDto);
@@ -73,6 +88,8 @@ public class CarController {
         }
     }
 
+    @ApiOperation(value = "上传图片")
+    @ApiImplicitParam(name = "file", value = "图片", required = true, type = "MultipartFile")
     @RequestMapping(value = "/addPicture", method = RequestMethod.POST)
     public Object addPicture(MultipartFile file) {
         return OssUtil.getUrl(file);

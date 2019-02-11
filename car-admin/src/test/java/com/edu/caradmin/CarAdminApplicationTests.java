@@ -3,6 +3,7 @@ package com.edu.caradmin;
 import com.edu.car.uid.IdWorker;
 import com.edu.caradmin.controller.CustomerController;
 import com.edu.caradmin.util.OssUtil;
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -59,6 +62,15 @@ public class CarAdminApplicationTests {
 
     @Test
     public void test() {
+        Set set1 = Sets.newHashSet(1,2,3,4,5);
+        Set set2 = Sets.newHashSet(1,2,3,4);
+        Sets.SetView difference = Sets.difference(set2, set1);
+        System.out.println(difference);
+    }
+
+    @Test
+    public void test2() {
+        System.out.println(IdWorker.getId());
     }
 }
 

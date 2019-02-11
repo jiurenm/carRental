@@ -9,15 +9,16 @@ import com.edu.car.uid.IdWorker;
 import com.edu.caradmin.dao.CarTypeMapper;
 import com.edu.caradmin.dto.CarTypeDto;
 import com.edu.caradmin.service.CarService;
-import com.edu.caradmin.util.OssUtil;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import redis.clients.jedis.Jedis;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -51,6 +52,11 @@ public class CarServiceImpl implements CarService {
     @Cacheable(value = "cars")
     public List<Car> showCar() {
         return carMapper.showCar( );
+    }
+
+    @Override
+    public CarDetail showDetail(Long id) {
+        return carMapper.showDetail(id);
     }
 
     @Override
@@ -118,11 +124,26 @@ public class CarServiceImpl implements CarService {
         if (RedisTool.tryGetDistributedLock(jedis, lockKey, required, EXPIRE_TIME)) {
             throw new RuntimeException("操作太快");
         } else {
+            CarDetail detail = carTypeDto.getCarDetail().get(0);
+            Set<Picture> pictures = Sets.newConcurrentHashSet(carTypeDto.getPictures());
             int result = 0;
             try {
-                result = carTypeMapper.updateType(Long.valueOf(carTypeDto.getId( )), carTypeDto.getName( ), carTypeDto.getPp( ),
-                        carTypeDto.getNdk( ), carTypeDto.getPzk( ), carTypeDto.getCs( ),
-                        carTypeDto.getPicture( ), carTypeDto.getCx( ));
+                result = carTypeMapper.updateType(Long.valueOf(carTypeDto.getId()), carTypeDto.getName(), carTypeDto.getPp(),
+                        carTypeDto.getNdk(), carTypeDto.getPzk(), carTypeDto.getCs(),
+                        carTypeDto.getPicture(), carTypeDto.getCx());
+                carTypeMapper.updateDetail(Long.valueOf(carTypeDto.getId()), detail.getZws(), detail.getCms(), detail.getRllx(),
+                        detail.getBsxlx(), detail.getPl(), detail.getRy(), detail.getQdfs(), detail.getFdjjqxs(), detail.getTc(),
+                        detail.getYxrl(), detail.getYx(), detail.getZy(), detail.getDcld(), detail.getQn(), detail.getDvd(),
+                        detail.getGps());
+
+                Set<Picture> originPic = Sets.newConcurrentHashSet(carMapper.showPic(Long.valueOf(carTypeDto.getId())));
+                if (originPic.size() > pictures.size()) {
+                    ImmutableList<Picture> difference = Sets.difference(originPic, pictures).immutableCopy().asList();
+                    //delete
+                } else if (originPic.size() < pictures.size()) {
+                    ImmutableList<Picture> difference = Sets.difference(pictures, originPic).immutableCopy().asList();
+                    //add
+                }
             } catch (Exception e) {
                 log.error(e.getMessage());
             }

@@ -58,4 +58,11 @@ public interface CarMapper {
             "FROM car.car_detail c " +
             "WHERE c.`id`=#{id}")
     List<CarDetail> showDetails(Long id);
+
+    @Select("SELECT c.`zws`,c.`cms`,c.`rllx`,c.`bsxlx`,c.`pl`" +
+            ",c.`ry`,c.`qdfs`,c.`fdjjqxs`,c.`tc`,c.`yxrl`" +
+            ",c.`yx`,c.`zy`,c.`dcld`,c.`qn`,c.`dvd`,c.`gps` " +
+            "FROM car.car_detail c " +
+            "WHERE c.`id`=#{id}")
+    CarDetail showDetail(Long id);
 }
