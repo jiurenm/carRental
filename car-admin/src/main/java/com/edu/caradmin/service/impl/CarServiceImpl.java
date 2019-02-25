@@ -49,7 +49,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    @Cacheable(value = "cars")
+//    @Cacheable(value = "cars")
     public List<Car> showCar() {
         return carMapper.showCar( );
     }
@@ -129,20 +129,21 @@ public class CarServiceImpl implements CarService {
             int result = 0;
             try {
                 result = carTypeMapper.updateType(Long.valueOf(carTypeDto.getId()), carTypeDto.getName(), carTypeDto.getPp(),
-                        carTypeDto.getNdk(), carTypeDto.getPzk(), carTypeDto.getCs(),
-                        carTypeDto.getPicture(), carTypeDto.getCx());
+                        carTypeDto.getNdk(), carTypeDto.getPzk(), carTypeDto.getCs(), carTypeDto.getCx());
                 carTypeMapper.updateDetail(Long.valueOf(carTypeDto.getId()), detail.getZws(), detail.getCms(), detail.getRllx(),
                         detail.getBsxlx(), detail.getPl(), detail.getRy(), detail.getQdfs(), detail.getFdjjqxs(), detail.getTc(),
                         detail.getYxrl(), detail.getYx(), detail.getZy(), detail.getDcld(), detail.getQn(), detail.getDvd(),
                         detail.getGps());
-
                 Set<Picture> originPic = Sets.newConcurrentHashSet(carMapper.showPic(Long.valueOf(carTypeDto.getId())));
                 if (originPic.size() > pictures.size()) {
                     ImmutableList<Picture> difference = Sets.difference(originPic, pictures).immutableCopy().asList();
                     //delete
+                    difference.forEach(picture -> carTypeMapper.deletePic(Long.valueOf(picture.getPid())));
                 } else if (originPic.size() < pictures.size()) {
                     ImmutableList<Picture> difference = Sets.difference(pictures, originPic).immutableCopy().asList();
+                    log.info("add" + difference);
                     //add
+                    difference.forEach(picture -> carTypeMapper.addPic(IdWorker.getId(), picture.getUrl(), Long.valueOf(carTypeDto.getId()), originPic.size()+1));
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());

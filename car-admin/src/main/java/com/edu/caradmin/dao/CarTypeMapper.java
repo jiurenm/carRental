@@ -55,10 +55,10 @@ public interface CarTypeMapper {
     void deletePic(@Param("id") Long id);
 
     @Update("UPDATE car.car c SET c.name=#{name},c.cx=#{cx},c.pp=#{pp},c.ndk=#{ndk},c.pzk=#{pzk}," +
-            "c.cs=#{cs},c.picture=#{picture} WHERE c.id={id}")
+            "c.cs=#{cs} WHERE c.id=#{id}")
     int updateType(@Param("id") Long id, @Param("name") String name, @Param("pp") String pp,
-                    @Param("ndk") String ndk, @Param("pzk") String pzk, @Param("cs") String cs,
-                   @Param("picture") String picture, @Param("cx") String cx);
+                    @Param("ndk") String ndk, @Param("pzk") String pzk, @Param("cs") String cs
+            , @Param("cx") String cx);
 
     @Update("UPDATE car.car_detail d SET d.zws=#{zws},d.cms=#{cms},d.rllx=#{rllx},d.bsxlx=#{bsxlx}," +
             " d.pl=#{pl},d.ry=#{ry},d.qdfs=#{qdfs},d.fdjjqxs=#{fdjjqxs},d.tc=#{tc},d.yxrl=#{yxrl}," +

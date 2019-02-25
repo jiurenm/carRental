@@ -11,6 +11,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,7 @@ public class CarController {
 
     @ApiOperation(value = "分页获取车型信息")
     @ApiParam(name = "pageDto", value = "页码", required = true, type = "PageDto")
+    @PreAuthorize(value = "hasAnyRole('ADMIN','USER')")
     @RequestMapping(value = "/carList", method = RequestMethod.POST)
     public Results findList(@RequestBody @Validated PageDto pageDto, BindingResult result) {
         if (result.hasErrors()) {
@@ -61,6 +63,18 @@ public class CarController {
         } else {
             PageInfo<Car> pageInfo = new PageInfo<>(carList);
             return new Results().pageSuccess(pageInfo.getList());
+        }
+    }
+
+    @ApiOperation(value = "通过id获取车型信息")
+    @ApiImplicitParam(name = "id", value = "车型id", required = true, type = "String")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Results findTypeById(@PathVariable String id) {
+        Car car = carService.findTypeById(Long.valueOf(id));
+        if (car != null) {
+            return new Results().success(car);
+        } else {
+            return new Results().failed("没有记录");
         }
     }
 

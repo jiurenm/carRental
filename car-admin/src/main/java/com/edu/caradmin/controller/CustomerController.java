@@ -166,8 +166,9 @@ public class CustomerController {
         int result1 = customerService.editCustomer(customerDto);
         if (result1 > 0) {
             return new Results().success(result);
+        } else {
+            return new Results().failed();
         }
-        return new Results().failed();
     }
 
     @ApiOperation(value = "获取黑名单")
@@ -207,7 +208,7 @@ public class CustomerController {
         Optional<Customer> customer = getCustomer(id);
         Results results = new Results();
         customer.ifPresent(c -> {
-            if (c.getIsEnable()) {
+            if (!c.getIsEnable()) {
                 int result = customerService.cancelBlackList(Long.valueOf(id));
                 results.success(result);
             } else {

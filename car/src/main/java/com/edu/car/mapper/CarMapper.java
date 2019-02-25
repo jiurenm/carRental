@@ -43,7 +43,7 @@ public interface CarMapper {
      * @param id 汽车id
      * @return 汽车的图片
      */
-    @Select("SELECT p.`pid`,p.`url` FROM car.picture p WHERE p.`cid`=#{id}")
+    @Select("SELECT p.`id` as pid,p.`url` FROM car.picture p WHERE p.`cid`=#{id}")
     List<Picture> showPic(Long id);
 
     /**

@@ -11,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -70,7 +74,20 @@ public class CarAdminApplicationTests {
 
     @Test
     public void test2() {
-        System.out.println(IdWorker.getId());
+        for(int i=0;i<10;i++){
+            System.out.println(IdWorker.getId());
+        }
+    }
+
+    @Test
+    public void test3() {
+        try(Connection c = DriverManager.getConnection("","","");
+            Statement s = c.createStatement()){
+            String sql = "";
+            s.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 
