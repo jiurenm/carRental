@@ -88,10 +88,7 @@ public class Log {
         synchronized (this) {
             log.info("***异常!!!***");
             log.info("异常信息：" + e.getMessage());
-            log.info("原因：" + e);
-            BasicDBObject logInfo = logQueue.remove( );
-            logInfo.append("异常", e.getMessage());
-            logger.info(logInfo);
+            e.printStackTrace();
         }
     }
 

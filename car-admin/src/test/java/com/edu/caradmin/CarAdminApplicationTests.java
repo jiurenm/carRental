@@ -1,24 +1,24 @@
 package com.edu.caradmin;
 
 import com.edu.car.uid.IdWorker;
-import com.edu.caradmin.controller.CustomerController;
-import com.edu.caradmin.util.OssUtil;
 import com.google.common.collect.Sets;
+import io.reactivex.*;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 
 @Slf4j
@@ -66,8 +66,8 @@ public class CarAdminApplicationTests {
 
     @Test
     public void test() {
-        Set set1 = Sets.newHashSet(1,2,3,4,5);
-        Set set2 = Sets.newHashSet(1,2,3,4);
+        Set<Integer> set1 = Sets.newHashSet(1,2,3,4,5);
+        Set<Integer> set2 = Sets.newHashSet(1,2,3,4);
         Sets.SetView difference = Sets.difference(set2, set1);
         System.out.println(difference);
     }
@@ -80,14 +80,13 @@ public class CarAdminApplicationTests {
     }
 
     @Test
-    public void test3() {
-        try(Connection c = DriverManager.getConnection("","","");
-            Statement s = c.createStatement()){
-            String sql = "";
-            s.execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void test1() {
+
+        Observable.just(1, 2, 3, 4)
+                .doOnNext(integer -> {
+
+                }).subscribe(integer -> {
+                });
+
     }
 }
-
