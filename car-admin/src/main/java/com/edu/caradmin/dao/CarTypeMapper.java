@@ -26,7 +26,9 @@ public interface CarTypeMapper {
             @Result(property = "carDetails",column = "id",javaType = List.class,
                     many = @Many(select = "com.edu.car.mapper.CarMapper.showDetails")),
             @Result(property = "pic",column = "id",javaType = List.class,
-                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPic"))
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPic")),
+            @Result(property = "price",column = "id",javaType = List.class,
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPrice"))
     })
     Car findTypeById(Long id);
 

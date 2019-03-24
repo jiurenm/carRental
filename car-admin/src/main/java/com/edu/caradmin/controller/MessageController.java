@@ -2,7 +2,6 @@ package com.edu.caradmin.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.edu.car.dto.Results;
-import com.edu.car.mapper.CustomerMapper;
 import com.edu.car.model.Customer;
 import com.edu.car.model.Message;
 import com.edu.car.util.JwtTokenUtil;

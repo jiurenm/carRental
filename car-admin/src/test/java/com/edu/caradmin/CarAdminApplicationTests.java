@@ -15,6 +15,9 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -81,12 +84,7 @@ public class CarAdminApplicationTests {
 
     @Test
     public void test1() {
-
-        Observable.just(1, 2, 3, 4)
-                .doOnNext(integer -> {
-
-                }).subscribe(integer -> {
-                });
-
+        Observable.just(1,1,1,2,2,3,4,5).distinct().subscribe(integer -> log.info(String.valueOf(integer)));
     }
+
 }

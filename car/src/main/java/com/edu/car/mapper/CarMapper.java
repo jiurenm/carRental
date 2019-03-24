@@ -3,6 +3,7 @@ package com.edu.car.mapper;
 import com.edu.car.model.Car;
 import com.edu.car.model.CarDetail;
 import com.edu.car.model.Picture;
+import com.edu.car.model.Price;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -33,7 +34,9 @@ public interface CarMapper {
             @Result(property = "carDetails",column = "id",javaType = List.class,
                     many = @Many(select = "com.edu.car.mapper.CarMapper.showDetails")),
             @Result(property = "pic",column = "id",javaType = List.class,
-                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPic"))
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPic")),
+            @Result(property = "price",column = "id",javaType = List.class,
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPrice"))
     })
     List<Car> showCar();
 
@@ -65,4 +68,7 @@ public interface CarMapper {
             "FROM car.car_detail c " +
             "WHERE c.`id`=#{id}")
     CarDetail showDetail(Long id);
+
+    @Select("SELECT p.`shortTime`,p.`workday`,p.`week`,p.`month`,p.`year` FROM car.price p WHERE p.`id`=#{id}")
+    Price showPrice(Long id);
 }

@@ -1,5 +1,6 @@
 package com.edu.car.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@EqualsAndHashCode
 public class Car implements Serializable {
     private String id;
     private String name;
@@ -27,4 +29,5 @@ public class Car implements Serializable {
     private String picture;
     private List<CarDetail> carDetails;
     private List<Picture> pic;
+    private List<Price> price;
 }
