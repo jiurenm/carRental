@@ -12,4 +12,5 @@ import java.util.List;
  */
 public interface CarService {
     List<Car> showCar();
+    Car carDetails(String id);
 }

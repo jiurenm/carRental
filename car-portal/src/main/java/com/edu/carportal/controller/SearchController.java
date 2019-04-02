@@ -36,7 +36,7 @@ public class SearchController {
     @RequestMapping(value = "/cx", method = RequestMethod.GET)
     public Results findAllCX() {
         List<Car> cx = searchService.findAllCX();
-        HashSet set = new HashSet();
+        HashSet<String> set = new HashSet<>();
         cx.forEach( name -> set.add(name.getCx()));
         return new Results().success(set);
     }
@@ -44,7 +44,7 @@ public class SearchController {
     @RequestMapping(value = "/pp", method = RequestMethod.GET)
     public Results findAllPP() {
         List<Car> cx = searchService.findAllPP();
-        HashSet set = new HashSet();
+        HashSet<String> set = new HashSet<>();
         cx.forEach( name -> set.add(name.getPp()));
         return new Results().success(set);
     }
@@ -63,7 +63,7 @@ public class SearchController {
     }
 
     private List<Car> filter(List<Car> cars, String[] params) {
-        List<List<String>> price = new ArrayList();
+        List<List<String>> price = new ArrayList<>();
         List<Car> newCars = new ArrayList<>();
         for (String param:params) {
             if ("0-150".equals(param) || "150-300".equals(param) ||

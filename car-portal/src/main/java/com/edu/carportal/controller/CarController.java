@@ -4,7 +4,9 @@ import com.edu.car.dto.Results;
 import com.edu.car.model.Car;
 import com.edu.carportal.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,7 +28,7 @@ public class CarController {
         this.carService = carService;
     }
 
-    @RequestMapping(value = "/")
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public Results showCar() {
         List<Car> carList = carService.showCar();
         if (carList.isEmpty()) {
@@ -34,5 +36,11 @@ public class CarController {
         } else {
             return new Results().success(carList);
         }
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Results carDetails(@PathVariable String id) {
+        Car car = carService.carDetails(id);
+        return new Results().success(car);
     }
 }

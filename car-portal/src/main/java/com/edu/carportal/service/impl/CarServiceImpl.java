@@ -28,4 +28,9 @@ public class CarServiceImpl implements CarService {
     public List<Car> showCar() {
         return carMapper.showCar();
     }
+
+    @Override
+    public Car carDetails(String id) {
+        return carMapper.carDetails(Long.valueOf(id));
+    }
 }
