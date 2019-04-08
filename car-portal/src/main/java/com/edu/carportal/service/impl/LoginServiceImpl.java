@@ -70,4 +70,10 @@ public class LoginServiceImpl implements LoginService {
     public Customer findCustomerByName(String username) {
         return customerMapper.findCustomer(username);
     }
+
+    @Override
+    public int changePhone(String username, String phone) {
+        Customer customer = customerMapper.findCustomer(username);
+        return loginMapper.changePhone(Long.valueOf(customer.getId()), phone);
+    }
 }

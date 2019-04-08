@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * carRental
@@ -30,7 +31,10 @@ public class CarController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public Results showCar() {
-        List<Car> carList = carService.showCar();
+        List<Car> carList = carService.showCar()
+                .stream()
+                .filter(car -> !car.getVehicles().isEmpty())
+                .collect(Collectors.toList());
         if (carList.isEmpty()) {
             return new Results().failed();
         } else {

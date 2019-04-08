@@ -34,7 +34,9 @@ public interface SearchMapper {
             @Result(property = "pic",column = "id",javaType = List.class,
                     many = @Many(select = "com.edu.car.mapper.CarMapper.showPic")),
             @Result(property = "price",column = "id",javaType = List.class,
-                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPrice"))
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPrice")),
+            @Result(property = "vehicles",column = "id",javaType = List.class,
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showVehicle"))
     })
     List<Car> searchByCx(String cx);
 
@@ -53,7 +55,9 @@ public interface SearchMapper {
             @Result(property = "pic",column = "id",javaType = List.class,
                     many = @Many(select = "com.edu.car.mapper.CarMapper.showPic")),
             @Result(property = "price",column = "id",javaType = List.class,
-                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPrice"))
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPrice")),
+            @Result(property = "vehicles",column = "id",javaType = List.class,
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showVehicle"))
     })
     List<Car> searchByPp(String pp);
 }

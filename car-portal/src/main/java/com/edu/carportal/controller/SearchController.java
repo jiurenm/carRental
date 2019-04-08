@@ -52,10 +52,15 @@ public class SearchController {
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public Results search(@RequestBody SearchDto searchDto) {
         if ("".equals(searchDto.getParam())) {
-            return new Results().success(carService.showCar());
+            return new Results().success(carService.showCar().stream()
+                    .filter(car -> !car.getVehicles().isEmpty())
+                    .collect(Collectors.toList()));
         }
         String[] params = searchDto.getParam().split(",");
-        List<Car> cars = searchService.search(params);
+        List<Car> cars = searchService.search(params)
+                .stream()
+                .filter(car -> !car.getVehicles().isEmpty())
+                .collect(Collectors.toList());;
         if (cars.isEmpty()) {
             return new Results().success(filter(carService.showCar(), params));
         }
@@ -77,6 +82,8 @@ public class SearchController {
             Double high = Double.valueOf(param.get(1));
             newCars.addAll(cars.stream().filter(car -> low<car.getPrice().get(0).getShortTime()&&car.getPrice().get(0).getShortTime()<high).collect(Collectors.toList()));
         });
-        return newCars;
+        return newCars.stream()
+                .filter(car -> !car.getVehicles().isEmpty())
+                .collect(Collectors.toList());
     }
 }

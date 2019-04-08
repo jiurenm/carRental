@@ -1,9 +1,6 @@
 package com.edu.car.mapper;
 
-import com.edu.car.model.Car;
-import com.edu.car.model.CarDetail;
-import com.edu.car.model.Picture;
-import com.edu.car.model.Price;
+import com.edu.car.model.*;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -36,7 +33,9 @@ public interface CarMapper {
             @Result(property = "pic",column = "id",javaType = List.class,
                     many = @Many(select = "com.edu.car.mapper.CarMapper.showPic")),
             @Result(property = "price",column = "id",javaType = List.class,
-                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPrice"))
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPrice")),
+            @Result(property = "vehicles",column = "id",javaType = List.class,
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showVehicle"))
     })
     List<Car> showCar();
 
@@ -55,7 +54,7 @@ public interface CarMapper {
             @Result(property = "pic",column = "id",javaType = List.class,
                     many = @Many(select = "com.edu.car.mapper.CarMapper.showPic")),
             @Result(property = "price",column = "id",javaType = List.class,
-                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPrice"))
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPrice")),
     })
     Car carDetails(Long id);
 
@@ -90,4 +89,7 @@ public interface CarMapper {
 
     @Select("SELECT p.`shortTime`,p.`workday`,p.`week`,p.`month`,p.`year` FROM car.price p WHERE p.`id`=#{id}")
     Price showPrice(Long id);
+
+    @Select("SELECT v.`number`, v.`type`, v.`status` FROM car.vehicle v WHERE v.`type`=#{id} AND v.`status`=0")
+    Vehicle showVehicle(Long id);
 }

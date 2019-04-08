@@ -3,6 +3,7 @@ package com.edu.carportal.dao;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * carRental
@@ -20,4 +21,7 @@ public interface LoginMapper {
 
     @Insert("INSERT INTO user_role(id,uid,rid) VALUES (#{id},#{uid},2)")
     int register3(@Param("id") Long id, @Param("uid") Long uid);
+
+    @Update("UPDATE customer c SET c.tel=#{tel} WHERE c.id=#{id}")
+    int changePhone(@Param("id") Long id, @Param("tel") String tel);
 }

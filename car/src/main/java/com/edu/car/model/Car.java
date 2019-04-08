@@ -30,4 +30,5 @@ public class Car implements Serializable {
     private List<CarDetail> carDetails;
     private List<Picture> pic;
     private List<Price> price;
+    private List<Vehicle> vehicles;
 }
