@@ -28,7 +28,7 @@ public interface VehicleMapper {
     @Insert("INSERT INTO vehicle(`id`, `number`, `type`) VALUES (#{id}, #{number}, #{type})")
     int insert(@Param("id") Long id, @Param("number") String number, @Param("type") Long type);
 
-    @Update("UPDATE vehicle SET number=#{number} AND type=#{type} WHERE id=#{id}")
+    @Update("UPDATE vehicle SET number=#{number},type=#{type} WHERE id=#{id}")
     int update(@Param("id") Long id, @Param("number") String number, @Param("type") Long type);
 
     @Update("UPDATE vehicle SET status=1 WHERE id=#{id}")

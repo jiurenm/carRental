@@ -92,4 +92,25 @@ public interface CarMapper {
 
     @Select("SELECT v.`number`, v.`type`, v.`status` FROM car.vehicle v WHERE v.`type`=#{id} AND v.`status`=0")
     Vehicle showVehicle(Long id);
+
+    @Select("SELECT c.`id`,c.`name`,c.`cx`,c.`pp`,c.`cs`,c.`ndk`,c.`pzk`,c.`picture` FROM car.car c WHERE c.`name`=#{name}")
+    @Results({
+            @Result(id=true,property = "id",column = "id"),
+            @Result(property = "name",column = "name"),
+            @Result(property = "cx",column = "cx"),
+            @Result(property = "pp",column = "pp"),
+            @Result(property = "cs",column = "cs"),
+            @Result(property = "ndk",column = "ndk"),
+            @Result(property = "pzk",column = "pzk"),
+            @Result(property = "picture",column = "picture"),
+            @Result(property = "carDetails",column = "id",javaType = List.class,
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showDetails")),
+            @Result(property = "pic",column = "id",javaType = List.class,
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPic")),
+            @Result(property = "price",column = "id",javaType = List.class,
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showPrice")),
+            @Result(property = "vehicles",column = "id",javaType = List.class,
+                    many = @Many(select = "com.edu.car.mapper.CarMapper.showVehicle"))
+    })
+    Car showCarByName(@Param("name") String name);
 }

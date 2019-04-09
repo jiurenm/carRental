@@ -19,4 +19,5 @@ public interface CarService {
     int addType(CarTypeDto carTypeDto);
     int deleteType(Long id);
     int updateType(CarTypeDto carTypeDto);
+    Car carDetails(String id);
 }

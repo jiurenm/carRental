@@ -154,4 +154,9 @@ public class CarServiceImpl implements CarService {
             }
         }
     }
+
+    @Override
+    public Car carDetails(String id) {
+        return carMapper.carDetails(Long.valueOf(id));
+    }
 }
