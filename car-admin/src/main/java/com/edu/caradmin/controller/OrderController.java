@@ -1,7 +1,6 @@
 package com.edu.caradmin.controller;
 
 import com.edu.car.dto.Results;
-import com.edu.car.model.Car;
 import com.edu.car.model.Order;
 import com.edu.car.model.Vehicle;
 import com.edu.caradmin.service.CarService;
@@ -9,6 +8,7 @@ import com.edu.caradmin.service.CustomerService;
 import com.edu.caradmin.service.OrderService;
 import com.edu.caradmin.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,8 +56,13 @@ public class OrderController {
         return new Results().pageSuccess(result);
     }
 
-    @RequestMapping(value = "/cancel", method = RequestMethod.GET)
-    public Results cancel() {
-        return new Results().success(null);
+    @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
+    public Results get(@PathVariable String id) {
+        return new Results().success(orderService.get(id));
+    }
+
+    @RequestMapping(value = "/cancel/{id}", method = RequestMethod.GET)
+    public Results cancel(@PathVariable String id) {
+        return new Results().success(orderService.cancel(id));
     }
 }

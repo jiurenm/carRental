@@ -33,4 +33,7 @@ public interface VehicleMapper {
 
     @Update("UPDATE vehicle SET status=1 WHERE id=#{id}")
     int rental(@Param("id") Long id);
+
+    @Update("UPDATE vehicle SET status=0 WHERE id=#{id}")
+    int retrun(@Param("id") Long id);
 }

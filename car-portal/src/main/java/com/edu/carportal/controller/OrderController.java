@@ -68,6 +68,11 @@ public class OrderController {
         return new Results().success(orderService.findNumber(Long.valueOf(id)));
     }
 
+    @RequestMapping(value = "/pay/{id}", method = RequestMethod.GET)
+    public Results pay(@PathVariable String id) {
+        return new Results().success(orderService.pay(Long.valueOf(id)));
+    }
+
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Results findAll(HttpServletRequest request) {
         String username = jwtTokenUtil.getUsernameFromToken(request.getHeader(this.tokenHeader).substring(this.tokenHead.length()));
@@ -76,13 +81,17 @@ public class OrderController {
         List result = new ArrayList();
         for (Order order:orders) {
             Car car = carService.carDetails(order.getVid());
+            List infos = new ArrayList();
             Map info = new HashMap(5);
             info.put("picture", car.getPicture());
             info.put("id", order.getId());
+            info.put("cid", car.getId());
+            info.put("status", getStatus(order.getStatus()));
             info.put("zws", car.getCarDetails().get(0).getZws());
+            infos.add(info);
             String[] time = {order.getGetTime(), order.getReturnTime()};
             Map map = new HashMap(5);
-            map.put("info", info);
+            map.put("info", infos);
             map.put("time", time);
             map.put("price", order.getPrice());
             map.put("status", getStatus(order.getStatus()));

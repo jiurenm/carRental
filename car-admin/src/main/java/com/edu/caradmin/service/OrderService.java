@@ -12,4 +12,7 @@ import java.util.List;
  */
 public interface OrderService {
     List<Order> all();
+    int get(String id);
+    int complete(String id);
+    int cancel(String id);
 }

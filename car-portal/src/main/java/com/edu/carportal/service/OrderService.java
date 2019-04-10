@@ -17,4 +17,5 @@ public interface OrderService {
     Order findOne(Long id);
     Vehicle findNumber(Long id);
     List<Order> findAll(Long id);
+    int pay(Long id);
 }

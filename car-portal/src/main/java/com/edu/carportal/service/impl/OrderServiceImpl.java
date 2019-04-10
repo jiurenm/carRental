@@ -48,4 +48,9 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> findAll(Long id) {
         return orderMapper.findAll(id);
     }
+
+    @Override
+    public int pay(Long id) {
+        return orderMapper.pay(id);
+    }
 }

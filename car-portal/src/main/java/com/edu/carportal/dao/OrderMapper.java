@@ -1,10 +1,7 @@
 package com.edu.carportal.dao;
 
 import com.edu.car.model.Order;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -25,4 +22,7 @@ public interface OrderMapper {
 
     @Select("SELECT * FROM `order` WHERE uid=#{id}")
     List<Order> findAll(@Param("id") Long id);
+
+    @Update("UPDATE `order` SET `status`=2 WHERE `id`=#{id}")
+    int pay(@Param("id") Long id);
 }
