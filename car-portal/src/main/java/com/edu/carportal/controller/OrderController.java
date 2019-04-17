@@ -55,7 +55,7 @@ public class OrderController {
         Long id = IdWorker.getId();
         orderService.insert(id, orderDto.getCid(), orderDto.getGetTime(),
                 orderDto.getReturnTime(), orderDto.getPrice(), customer.getId());
-        return new Results().success(id);
+        return new Results().success(id.toString());
     }
 
     @RequestMapping(value = "/info/{id}", method = RequestMethod.GET)

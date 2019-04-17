@@ -24,4 +24,7 @@ public interface LoginMapper {
 
     @Update("UPDATE customer c SET c.tel=#{tel} WHERE c.id=#{id}")
     int changePhone(@Param("id") Long id, @Param("tel") String tel);
+
+    @Update("UPDATE login l SET l.password=#{password} WHERE id=#{id}")
+    int changePassword(@Param("id") Long id, @Param("password") String password);
 }

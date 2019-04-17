@@ -14,6 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,6 +26,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class LoginServiceImpl implements LoginService {
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
     private final JwtTokenUtil jwtTokenUtil;
     private final UserDetailsService userDetailsService;
     private final AuthenticationManager authenticationManager;
@@ -75,5 +78,12 @@ public class LoginServiceImpl implements LoginService {
     public int changePhone(String username, String phone) {
         Customer customer = customerMapper.findCustomer(username);
         return loginMapper.changePhone(Long.valueOf(customer.getId()), phone);
+    }
+
+    @Override
+    public int changePassword(String username, String password) {
+        Customer customer = customerMapper.findCustomer(username);
+        String pwd = encoder.encode(password);
+        return loginMapper.changePassword(Long.valueOf(customer.getId()), pwd);
     }
 }

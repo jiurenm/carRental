@@ -13,4 +13,5 @@ public interface LoginService {
     int register(Long uid, Long id, String password, String username);
     Customer findCustomerByName(String username);
     int changePhone(String username, String phone);
+    int changePassword(String username, String password);
 }

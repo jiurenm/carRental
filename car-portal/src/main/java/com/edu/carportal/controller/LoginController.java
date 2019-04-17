@@ -78,8 +78,14 @@ public class LoginController {
 
     @PreAuthorize(value = "hasRole('USER')")
     @RequestMapping(value = "/changePhone/{phone}", method = RequestMethod.GET)
-    public Results changePassword(HttpServletRequest request, @PathVariable String phone) {
+    public Results changePhone(HttpServletRequest request, @PathVariable String phone) {
         String username = jwtTokenUtil.getUsernameFromToken(request.getHeader(this.tokenHeader).substring(this.tokenHead.length()));
         return new Results().success(loginService.changePhone(username, phone));
+    }
+
+    @RequestMapping(value = "/changePassword/{password}", method = RequestMethod.GET)
+    public Results changePassword(HttpServletRequest request, @PathVariable String password) {
+        String username = jwtTokenUtil.getUsernameFromToken(request.getHeader(this.tokenHeader).substring(this.tokenHead.length()));
+        return new Results().success(loginService.changePassword(username, password));
     }
 }
