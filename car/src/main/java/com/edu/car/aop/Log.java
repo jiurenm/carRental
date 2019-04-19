@@ -1,8 +1,6 @@
 package com.edu.car.aop;
 
-import com.edu.car.dto.Results;
 import com.edu.car.uid.IdWorker;
-import com.google.common.collect.Queues;
 import com.mongodb.BasicDBObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.log4j.Logger;
@@ -10,24 +8,21 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * 日志
+ * carRental
  *
  * @author Administrator
- * @date 2019/1/11 14:14
+ * @date 2019/4/18 16:11
  */
 @Slf4j
-@Aspect
 @Component
 public class Log {
     private final static Logger logger = Logger.getLogger("mongodb");

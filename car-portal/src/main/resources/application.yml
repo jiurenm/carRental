@@ -11,12 +11,6 @@ spring:
         server-addr: 188.131.137.79:8848
   main:
     allow-bean-definition-overriding: true
-  boot:
-    admin:
-      client:
-        url: http://localhost:8888
-        username: admin
-        password: admin
 management:
   endpoints:
     web:

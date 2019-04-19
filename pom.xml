@@ -9,8 +9,23 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>car</module>
         <module>car-admin</module>
         <module>car-portal</module>
+        <module>car</module>
     </modules>
+    <packaging>pom</packaging>
+
+    <distributionManagement>
+        <repository>
+            <id>central</id>
+            <name>car</name>
+            <url>http://188.131.137.79:9000/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>car-snapshots</name>
+            <url>http://188.131.137.79:9000/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 </project>
