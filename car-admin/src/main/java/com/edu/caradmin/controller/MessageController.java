@@ -5,6 +5,7 @@ import com.edu.car.dto.Results;
 import com.edu.car.model.Customer;
 import com.edu.car.model.Message;
 import com.edu.car.util.JwtTokenUtil;
+import com.edu.caradmin.dto.MessageDto;
 import com.edu.caradmin.service.CustomerService;
 import com.edu.caradmin.service.MessageService;
 import com.google.common.collect.Lists;
@@ -170,6 +171,12 @@ public class MessageController {
             }
         });
         return list.get(0);
+    }
+
+    @RequestMapping(value = "/send", method = RequestMethod.POST)
+    public Results send(@RequestBody MessageDto messageDto) {
+        messageService.send(messageDto);
+        return new Results().success("");
     }
 
     private Long getId(HttpServletRequest request) {

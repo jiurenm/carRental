@@ -74,6 +74,11 @@ public interface CarTypeMapper {
     @Insert("INSERT INTO car.picture(id,url,cid,pid) VALUES (#{id},#{url},#{cid},#{pid})")
     void addPic(@Param("id") Long id, @Param("url") String url, @Param("cid") Long cid, @Param("pid") Integer pid);
 
+    @Update("UPDATE car.price p SET p.shortTime=#{shortTime}, p.workday=#{workday}, p.week=#{week}, p.month" +
+            "=#{month}, p.year=#{year} WHERE id=#{id}")
+    void updatePrice(@Param("id") Long id, @Param("shortTime") Double shortTime, @Param("workday") Double workday,
+                     @Param("week") Double week, @Param("month") Double month, @Param("year") Double year);
+
     @Delete("DELETE FROM car.picture WHERE id=#{id}")
     void deletePicById(@Param("id") Long id);
 }

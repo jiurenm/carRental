@@ -4,6 +4,7 @@ import com.edu.car.mapper.CarMapper;
 import com.edu.car.model.Car;
 import com.edu.car.model.CarDetail;
 import com.edu.car.model.Picture;
+import com.edu.car.model.Price;
 import com.edu.car.redis.RedisTool;
 import com.edu.car.uid.IdWorker;
 import com.edu.caradmin.dao.CarTypeMapper;
@@ -124,6 +125,7 @@ public class CarServiceImpl implements CarService {
             throw new RuntimeException("操作太快");
         } else {
             CarDetail detail = carTypeDto.getCarDetail().get(0);
+            Price price = carTypeDto.getPrices().get(0);
             Set<Picture> pictures = Sets.newConcurrentHashSet(carTypeDto.getPictures());
             int result = 0;
             try {
@@ -144,6 +146,8 @@ public class CarServiceImpl implements CarService {
                     //add
                     difference.forEach(picture -> carTypeMapper.addPic(IdWorker.getId(), picture.getUrl(), Long.valueOf(carTypeDto.getId()), originPic.size()+1));
                 }
+                carTypeMapper.updatePrice(Long.valueOf(carTypeDto.getId()), price.getShortTime(), price.getWorkday(),
+                        price.getWeek(), price.getMonth(), price.getYear());
             } catch (Exception e) {
                 log.error(e.getMessage());
             }

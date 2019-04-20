@@ -1,5 +1,7 @@
 package com.edu.caradmin;
 
+import com.edu.car.mapper.CarouselMapper;
+import com.edu.car.model.Carousel;
 import com.edu.car.uid.IdWorker;
 import com.google.common.collect.Sets;
 import io.reactivex.*;
@@ -12,6 +14,7 @@ import io.reactivex.schedulers.Schedulers;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -86,5 +89,4 @@ public class CarAdminApplicationTests {
     public void test1() {
         Observable.just(1,1,1,2,2,3,4,5).distinct().subscribe(integer -> log.info(String.valueOf(integer)));
     }
-
 }

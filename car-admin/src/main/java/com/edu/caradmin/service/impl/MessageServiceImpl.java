@@ -1,11 +1,17 @@
 package com.edu.caradmin.service.impl;
 
+import com.edu.car.mapper.CustomerMapper;
 import com.edu.car.mapper.MessageMapper;
+import com.edu.car.model.Customer;
 import com.edu.car.model.Message;
+import com.edu.car.uid.IdWorker;
+import com.edu.caradmin.dto.MessageDto;
 import com.edu.caradmin.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -16,11 +22,13 @@ import java.util.List;
  */
 @Service
 public class MessageServiceImpl implements MessageService {
+    private final CustomerMapper customerMapper;
     private final MessageMapper messageMapper;
 
     @Autowired
-    public MessageServiceImpl(MessageMapper messageMapper) {
+    public MessageServiceImpl(MessageMapper messageMapper, CustomerMapper customerMapper) {
         this.messageMapper = messageMapper;
+        this.customerMapper = customerMapper;
     }
 
     @Override
@@ -51,5 +59,18 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public int clearMessage(Long recId) {
         return messageMapper.clearMessage(recId);
+    }
+
+    @Override
+    public void send(MessageDto messageDto) {
+        Long id = IdWorker.getId();
+        LocalDate today = LocalDate.now();
+        LocalTime time = LocalTime.now();
+        String date = today.toString() + " " + time.toString();
+        messageMapper.send(id, messageDto.getTitle(), messageDto.getMessage());
+        List<Customer> customers = customerMapper.showCustomers();
+        for (Customer customer:customers) {
+            messageMapper.send1(date, Long.valueOf(customer.getId()), id);
+        }
     }
 }

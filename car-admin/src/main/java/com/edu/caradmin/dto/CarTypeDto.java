@@ -2,6 +2,7 @@ package com.edu.caradmin.dto;
 
 import com.edu.car.model.CarDetail;
 import com.edu.car.model.Picture;
+import com.edu.car.model.Price;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -26,4 +27,5 @@ public class CarTypeDto {
     private String picture;
     private List<CarDetail> carDetail;
     private List<Picture> pictures;
+    private List<Price> prices;
 }

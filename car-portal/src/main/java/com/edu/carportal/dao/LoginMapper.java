@@ -16,7 +16,7 @@ public interface LoginMapper {
     @Insert("INSERT INTO login(id,password) VALUES (#{id},#{password})")
     int register1(@Param("id") Long id, @Param("password") String password);
 
-    @Insert("INSERT INTO customer(id,tel,username) VALUES (#{id},#{tel},#{username})")
+    @Insert("INSERT INTO customer(id,tel,username,name) VALUES (#{id},#{tel},#{username},#{username})")
     int register2(@Param("id") Long id, @Param("tel") String tel, @Param("username") String username);
 
     @Insert("INSERT INTO user_role(id,uid,rid) VALUES (#{id},#{uid},2)")

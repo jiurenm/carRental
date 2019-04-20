@@ -1,10 +1,7 @@
 package com.edu.car.mapper;
 
 import com.edu.car.model.Message;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -33,4 +30,10 @@ public interface MessageMapper {
 
     @Delete("DELETE FROM car.message WHERE id=#{id} AND `status`=2")
     int clearMessage(Long id);
+
+    @Insert("INSERT INTO car.messagetext(id, title, message) VALUES (#{id}, #{title}, #{message})")
+    int send(@Param("id") Long id, @Param("title") String title, @Param("message") String message);
+
+    @Insert("INSERT INTO car.message(date, recId, messageId) VALUES (#{date}, #{recId}, #{messageId})")
+    int send1(@Param("date") String date, @Param("recId") Long recId, @Param("messageId") Long messageId);
 }

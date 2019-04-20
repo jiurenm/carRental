@@ -1,6 +1,7 @@
 package com.edu.caradmin.service;
 
 import com.edu.car.model.Message;
+import com.edu.caradmin.dto.MessageDto;
 
 import java.util.List;
 
@@ -17,4 +18,5 @@ public interface MessageService {
     int deleteMessage(Long id);
     int revertMessage(Long id);
     int clearMessage(Long recId);
+    void send(MessageDto messageDto);
 }
