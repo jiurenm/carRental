@@ -1,6 +1,7 @@
 package com.edu.carportal.service;
 
 import com.edu.car.model.Message;
+import com.edu.carportal.dto.MessageDto;
 
 import java.util.List;
 
@@ -16,4 +17,5 @@ public interface MessageService {
     int recycle(String id);
     int revert(String id);
     int delete(String id);
+    int send(MessageDto messageDto);
 }

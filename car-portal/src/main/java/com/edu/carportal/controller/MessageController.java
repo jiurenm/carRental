@@ -3,14 +3,12 @@ package com.edu.carportal.controller;
 import com.edu.car.dto.Results;
 import com.edu.car.model.Customer;
 import com.edu.car.util.JwtTokenUtil;
+import com.edu.carportal.dto.MessageDto;
 import com.edu.carportal.service.LoginService;
 import com.edu.carportal.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -65,5 +63,10 @@ public class MessageController {
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public Results delete(@PathVariable String id) {
         return new Results().success(messageService.delete(id));
+    }
+
+    @RequestMapping(value = "/send", method = RequestMethod.POST)
+    public Results send(@RequestBody MessageDto messageDto) {
+        return new Results().success(messageService.send(messageDto));
     }
 }
