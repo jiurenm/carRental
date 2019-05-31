@@ -60,7 +60,7 @@ public class SearchController {
         List<Car> cars = searchService.search(params)
                 .stream()
                 .filter(car -> !car.getVehicles().isEmpty())
-                .collect(Collectors.toList());;
+                .collect(Collectors.toList());
         if (cars.isEmpty()) {
             return new Results().success(filter(carService.showCar(), params));
         }
