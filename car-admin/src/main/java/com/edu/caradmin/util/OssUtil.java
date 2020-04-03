@@ -18,8 +18,8 @@ import java.io.InputStream;
 public class OssUtil {
     public static String getUrl(MultipartFile file) {
         String endpoint = "oss-cn-shanghai.aliyuncs.com";
-        String accessKeyId = "LTAIKhwpYCuDStdz";
-        String accessKeySecret = "4hwhm3bobkZKQQ51iQbRpjVqgQA4Rv";
+        String accessKeyId = "XXXXXXXXX";
+        String accessKeySecret = "XXXXXXXXXXXXXXX";
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
         StringBuilder name = new StringBuilder().append(IdWorker.getId()).append(".jpg");
         try {
